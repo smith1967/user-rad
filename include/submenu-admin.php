@@ -24,7 +24,7 @@ if (!defined('BASE_PATH'))
             ),
             'upload-std' => array(
                 'title' => 'จัดการไฟล์',
-                'url' => 'admin/file-management',
+                'url' => 'admin/file-manager',
                 'cond' => true,
             ),
             'check-data' => array(
