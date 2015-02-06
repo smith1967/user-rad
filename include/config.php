@@ -32,7 +32,7 @@ if(version_compare($php_version, PHP_VERSION)>=0){
 }
 session_start();
 ///////////////////////////////////////////////////////////
-$site_url = 'http://localhost/user-rad-bt/';  // เปลี่ยนตาม site ที่ติดตั้ง
+$site_url = 'http://localhost/user-rad/';  // เปลี่ยนตาม site ที่ติดตั้ง
 //$fis_year = '2556';         
 $site_title = 'CSTC Radius User Admin';
 $site_subtitle = 'Radius-user Admin';
@@ -42,9 +42,9 @@ $auhtor = "Smith Sookkhi";
 $author_email = "smith@cstc.ac.th";
 // database parameter
 $host = 'localhost';
-$user = 'root';
-$password = 'dbpassword';
-$database = 'dbname';
+$user = 'user_rad';
+$password = 'user_rad@cstc';
+$database = 'radius';
 $charset = 'utf8';
 ///////////////////////////////////////////////////////////
 define('SITE_URL', $site_url);

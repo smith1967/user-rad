@@ -5,8 +5,7 @@ $title = "อัพโหลดไฟล์และตรวจสอบข้�
 $active = 'admin';
 $subactive = 'upload-std';
 is_admin('home/index');
-?>
-<?php
+
 /* -- upload process -- */
 if (isset($_POST['submit'])):
     $err = do_upload();
@@ -103,7 +102,7 @@ function do_upload() {
     }
     if (count($err) > 0) {
         $_SESSION['err'] = $err;
-        redirect('admin/upload-std');
+        //redirect('admin/upload-std');
     } else {
         $_SESSION['info'][] = "upload ข้อมูลเรียบร้อย";
         //do_transfer($stdfile);

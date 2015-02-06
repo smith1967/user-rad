@@ -5,9 +5,7 @@ $title = "ผู้ดูแลระบบ";
 $active = 'admin';
 $subactive = 'home';
 is_admin('home/index');
-?>
-
-<?php
+// check condition
 if (isset($_POST)) {
     $data = $_POST;
     // transfer data
