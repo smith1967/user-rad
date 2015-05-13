@@ -57,7 +57,7 @@ is_admin('home/index');
     </div>
     <div class="table-responsive col-md-6">
         <table class="table table-condensed table-striped" >
-            <thead><th>กลุ่มชั้นปี</th><th>ลบข้อมูล</th></thead>
+            <thead><th>กลุ่มชั้นปี</th><th>จำนวน</th><th>ลบข้อมูล</th></thead>
             <?php
             $groups = getGroup();
             if ($groups):
@@ -65,6 +65,7 @@ is_admin('home/index');
                     ?>
                     <tr>
                         <td> <?php echo $row['grp']; ?></td>
+                        <td> <?php echo $row['total']; ?></td>
                         <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $row['grp']; ?>" class="delete">ลบ</a></td>
                     </tr>
                     <?php
@@ -107,12 +108,15 @@ function do_delete($val) {
     $sql = "DELETE FROM radreply WHERE username LIKE " . pq($val);
     mysqli_query($db, $sql);
     set_info("<p> ลบข้อมูล radreply จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
+        $sql = "DELETE FROM radacct WHERE username LIKE " . pq($val);
+    mysqli_query($db, $sql);
+    set_info("<p> ลบข้อมูล radacct จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
     redirect('admin/import-std-radius');
 }
 
 function getGroup() {
     global $db;
-    $sql = "SELECT DISTINCT(substring(username,1,4)) as grp  FROM users WHERE username != 'admin';";
+    $sql = "SELECT DISTINCT(substring(username,1,4)) as grp,COUNT(substring(username,1,4)) as total  FROM users WHERE username REGEXP '^[0-9].{4}' GROUP BY substring(username,1,4);";
     $result = mysqli_query($db, $sql);
     return $result;
 }
