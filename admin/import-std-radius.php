@@ -75,6 +75,13 @@ is_admin('home/index');
     </div>   
 </div>  
 </div> <!--End Main container -->
+<script>
+$('.delete').click(function(){
+   if(!confirm('ยืนยันลบข้อมูล')){
+       return false;
+   } 
+});
+</script>
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php
 function getTotal(){
