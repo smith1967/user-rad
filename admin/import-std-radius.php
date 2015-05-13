@@ -77,20 +77,21 @@ is_admin('home/index');
 </div>  
 </div> <!--End Main container -->
 <script>
-$('.delete').click(function(){
-   if(!confirm('ยืนยันลบข้อมูล')){
-       return false;
-   } 
-});
+    $('.delete').click(function() {
+        if (!confirm('ยืนยันลบข้อมูล')) {
+            return false;
+        }
+    });
 </script>
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php
-function getTotal(){
+
+function getTotal() {
     global $db;
     $sql = "SELECT COUNT('std_id') AS total FROM stdtemp";
-     $rs = mysqli_query($db, $sql);
+    $rs = mysqli_query($db, $sql);
     $total = mysqli_fetch_array($rs);
-    return $total; 
+    return $total;
 }
 
 function do_delete($val) {
@@ -108,7 +109,7 @@ function do_delete($val) {
     $sql = "DELETE FROM radreply WHERE username LIKE " . pq($val);
     mysqli_query($db, $sql);
     set_info("<p> ลบข้อมูล radreply จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
-        $sql = "DELETE FROM radacct WHERE username LIKE " . pq($val);
+    $sql = "DELETE FROM radacct WHERE username LIKE " . pq($val);
     mysqli_query($db, $sql);
     set_info("<p> ลบข้อมูล radacct จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
     redirect('admin/import-std-radius');
@@ -163,7 +164,7 @@ function do_import($year) {
                 set_err("การเพิ่มข้อมูลเข้าตาราง usergroup ผิดพลาด  : " . mysqli_error($db));
             }
         }
-        set_info("เพิ่มข้อมูลเข้า radius จำนวน ".  mysqli_num_rows($result)." รายการ ");
+        set_info("เพิ่มข้อมูลเข้า radius จำนวน " . mysqli_num_rows($result) . " รายการ ");
     } else {
         set_err('ไม่มีการโอนข้อมูลเข้าตาราง radius เนื่องจากมีข้อมูลในระบบอยู่แล้ว');
     }
