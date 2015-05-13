@@ -14,13 +14,11 @@ is_admin('home/index');
     if (isset($_GET['action']) && isset($_GET['group'])) {
         do_delete($_GET['group']);
     }
-    if (isset($_POST['submit']) && isset($_POST['year'])) {
-        //die('test');
-        $year = substr($_POST['year'], 2);
-        do_import($year);
+    if (isset($_POST['submit']) && isset($_POST['grp'])) {
+        do_import($_POST['grp']);
     }
-    $ed_year = date('Y') + 543;
     ?>     
+
     <div class="col-md-6">
         <div class="table-responsive">
             <table class="table table-condensed table-striped" >
@@ -39,14 +37,16 @@ is_admin('home/index');
                 ?>
             </table>
         </div>
+
         <form method="post">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="sel1">เลือกปีการศึกษา:</label>
-                    <select class="form-control" id="sel2" name="year">
-                        <?php for ($i = 0; $i < 16; $i++): ?>
-                            <option><?php echo $ed_year--; ?></option>
-                        <?php endfor; ?>
+                    <label for="sel1">เลือกกลุ่มนักศึกษา:</label>
+                    <select class="form-control" id="sel2" name="grp">
+                        <?php $groups = getGroupStd(); ?>
+                        <?php while ($row = mysqli_fetch_array($groups)) : ?>
+                            <option data-subtext="<?php echo $row['total'] ?>"><?php echo $row['grp']; ?></option>
+                        <?php endwhile; ?>
                     </select>
                 </div>
                 <div class="form-group">
@@ -57,15 +57,14 @@ is_admin('home/index');
     </div>
     <div class="table-responsive col-md-6">
         <table class="table table-condensed table-striped" >
-            <thead><th>กลุ่มชั้นปี</th><th>จำนวน</th><th>ลบข้อมูล</th></thead>
+            <thead><th>กลุ่มชั้นปี</th><th>ลบข้อมูล</th></thead>
             <?php
             $groups = getGroup();
             if ($groups):
                 while ($row = mysqli_fetch_array($groups)) :
                     ?>
                     <tr>
-                        <td> <?php echo $row['grp']; ?></td>
-                        <td> <?php echo $row['total']; ?></td>
+                        <td> <?php echo $row['grp']; ?> <span class="badge"><?php echo $row['total'] ?></span></td>
                         <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $row['grp']; ?>" class="delete">ลบ</a></td>
                     </tr>
                     <?php
@@ -117,18 +116,23 @@ function do_delete($val) {
 
 function getGroup() {
     global $db;
-    $sql = "SELECT DISTINCT(substring(username,1,4)) as grp,COUNT(substring(username,1,4)) as total  FROM users WHERE username REGEXP '^[0-9].{4}' GROUP BY substring(username,1,4);";
+    $sql = "SELECT DISTINCT(substring(username,1,4)) as grp,COUNT(substring(username,1,4)) as total  FROM users WHERE username REGEXP '^[0-9].{4}' GROUP BY substring(username,1,4) ORDER BY grp DESC;";
     $result = mysqli_query($db, $sql);
     return $result;
 }
 
-function do_import($year) {
+function getGroupStd() {
     global $db;
-    if (strlen($year) != 2)
-        return;
+    $sql = "SELECT DISTINCT(substring(std_id,1,4)) as grp,COUNT(substring(std_id,1,4)) as total  FROM stdtemp WHERE std_id REGEXP '^[0-9].{4}' GROUP BY substring(std_id,1,4) ORDER BY grp DESC;";
+    $result = mysqli_query($db, $sql);
+    return $result;
+}
+
+function do_import($grp) {
+    global $db;
     $cfg = getConfig();
     /* tranfer from tmp to radius */
-    $sql = "SELECT * FROM stdtemp WHERE std_id LIKE '" . $year . "%' AND std_id NOT IN (SELECT UserName FROM radcheck)";
+    $sql = "SELECT * FROM stdtemp WHERE std_id LIKE '" . $grp . "%' AND std_id NOT IN (SELECT UserName FROM radcheck)";
     $result = mysqli_query($db, $sql);
 //echo "<table>";
     if (mysqli_num_rows($result) > 0) {
@@ -172,7 +176,7 @@ function do_import($year) {
     $sql = "REPLACE INTO users (username,password,fname,lname,groupname,pid) 
     SELECT stdtemp.std_id,stdtemp.pid,stdtemp.fname,stdtemp.lname,stdtemp.groupname,stdtemp.pid 
     FROM 
-    `stdtemp` WHERE std_id LIKE '" . $year . "%' AND std_id NOT IN (SELECT username FROM users);";
+    `stdtemp` WHERE std_id LIKE '" . $grp . "%' AND std_id NOT IN (SELECT username FROM users);";
     mysqli_query($db, $sql);
     if (mysqli_affected_rows($db) < 1) {
         set_err("การเพิ่มข้อมูลเข้าตาราง users ผิดพลาด  : " . mysqli_error($db));
