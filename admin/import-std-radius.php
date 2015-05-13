@@ -15,7 +15,7 @@ is_admin('home/index');
         do_delete($_GET['group']);
     }
     if (isset($_POST['submit']) && isset($_POST['grp'])) {
-        do_import($_POST['grp'],$_POST['otpconf']);
+        do_import($_POST['grp'],$_POST['optconf']);
     }
     ?>     
 
@@ -25,7 +25,7 @@ is_admin('home/index');
                 <div class="form-group">
                     <label>กลุ่มผู้ใช้งาน/ดาวน์โหลด/อัพโหลด</label>
                     <?php
-                    $configs = getConfig();
+                    $configs = getConfigs();
                     foreach ($configs as $config) :
                         ?>
                         <div class="radio">
@@ -122,9 +122,13 @@ function getGroupStd() {
     return $result;
 }
 
-function do_import($grp, $sel) {
+function do_import($grp, $gid) {
     global $db;
-    $cfg = getConfig();
+    if(empty($gid)){
+        set_err("กรุณาเลือกกลุ่มผู้ใช้งาน");
+        redirect('admin/import-std-radius');
+    }  
+    $cfg = getConfig($gid);
     /* tranfer from tmp to radius */
     $sql = "SELECT * FROM stdtemp WHERE std_id LIKE '" . $grp . "%' AND std_id NOT IN (SELECT UserName FROM radcheck)";
     $result = mysqli_query($db, $sql);
@@ -137,6 +141,7 @@ function do_import($grp, $sel) {
                 set_err("การเพิ่มข้อมูลเข้าตาราง radcheck ผิดพลาด : " . mysqli_error($db));
             }
             $sql = "REPLACE INTO radcheck (UserName, Attribute, Op, Value) VALUES (" . pq($line['std_id']) . ", 'Simultaneous-Use', ':=', " . pq(1) . ");";
+            mysqli_query($db, $sql);          
             if (mysqli_affected_rows($db) < 1) {
                 set_err("การเพิ่มข้อมูลเข้าตาราง radcheck ผิดพลาด : " . mysqli_error($db));
             }
@@ -182,15 +187,20 @@ function do_import($grp, $sel) {
     redirect('admin/import-std-radius');
 }
 
-function getConfig() {
+function getConfigs() {
     global $db;
     $configs = array();
-    /* ---- อ่านค่าคอนฟิกของกลุ่ม 4=นักเรียน ----------- */
     $sql = "SELECT * FROM group_config;";
     $rs = mysqli_query($db, $sql);
     while ($row = mysqli_fetch_array($rs)) {
         $configs[] = $row;
     }
     return $configs;
-    /* ------------------------ */
+}
+function getConfig($gid) {
+    global $db;
+    $sql = "SELECT * FROM group_config WHERE gid = ".pq($gid).";";
+    $rs = mysqli_query($db, $sql);
+    $config = mysqli_fetch_array($rs);
+    return $config;
 }
