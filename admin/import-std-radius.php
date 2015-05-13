@@ -15,32 +15,26 @@ is_admin('home/index');
         do_delete($_GET['group']);
     }
     if (isset($_POST['submit']) && isset($_POST['grp'])) {
-        do_import($_POST['grp']);
+        do_import($_POST['grp'],$_POST['otpconf']);
     }
     ?>     
 
     <div class="col-md-6">
-        <div class="table-responsive">
-            <table class="table table-condensed table-striped" >
-                <thead><th>Groupname</th><th>Download</th><th>Upload</th></thead>
-                <?php
-                $cfg = getConfig();
-                if (is_array($cfg)):
-                    ?>
-                    <tr>
-                        <td> <?php echo $cfg['groupname']; ?></td>
-                        <td> <?php echo $cfg['download']; ?></td>
-                        <td> <?php echo $cfg['upload']; ?></td>
-                    </tr>
-                    <?php
-                endif;
-                ?>
-            </table>
-        </div>
-
         <form method="post">
             <div class="col-md-6">
                 <div class="form-group">
+                    <label>กลุ่มผู้ใช้งาน/ดาวน์โหลด/อัพโหลด</label>
+                    <?php
+                    $configs = getConfig();
+                    foreach ($configs as $config) :
+                        ?>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optconf" id="optionsRadios1" value="<?php echo $config['gid'] ?>" ><?php echo $config['group_desc'] ?>
+                                <span class="badge"><?php echo $config['download'] ?></span><span class="badge"><?php echo $config['upload'] ?></span>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
                     <label for="sel1">เลือกกลุ่มนักศึกษา:</label>
                     <select class="form-control" id="sel2" name="grp">
                         <?php $groups = getGroupStd(); ?>
@@ -57,7 +51,7 @@ is_admin('home/index');
     </div>
     <div class="table-responsive col-md-6">
         <table class="table table-condensed table-striped" >
-            <thead><th>กลุ่มชั้นปี</th><th>ลบข้อมูล</th></thead>
+            <thead><th>กลุ่มชั้นปี/จำนวน</th><th>ลบข้อมูล</th></thead>
             <?php
             $groups = getGroup();
             if ($groups):
@@ -128,7 +122,7 @@ function getGroupStd() {
     return $result;
 }
 
-function do_import($grp) {
+function do_import($grp, $sel) {
     global $db;
     $cfg = getConfig();
     /* tranfer from tmp to radius */
@@ -190,10 +184,13 @@ function do_import($grp) {
 
 function getConfig() {
     global $db;
+    $configs = array();
     /* ---- อ่านค่าคอนฟิกของกลุ่ม 4=นักเรียน ----------- */
-    $sql = "SELECT * FROM group_config WHERE gid = 4 ;";
+    $sql = "SELECT * FROM group_config;";
     $rs = mysqli_query($db, $sql);
-    $config = mysqli_fetch_array($rs);
-    return $config;
+    while ($row = mysqli_fetch_array($rs)) {
+        $configs[] = $row;
+    }
+    return $configs;
     /* ------------------------ */
 }
