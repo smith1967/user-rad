@@ -53,7 +53,6 @@ function is_admin($url='') {
 
 function gen_option($sql, $def) {
     global $db;
-
     if (is_array($sql)) {
         foreach ($sql as $k => $v) {
             $sel = $k == $def ? ' selected="selected"' : '';
@@ -119,6 +118,13 @@ function gen_menu($menu_class, $menu = array(), $active = 'home/index') {
         $a[] = '<li' . $sel . '><a href="' . $href . '">' . $m['title'] . '</a></li>';
     }
     return '<ul class="' . $menu_class . '">' . implode('', $a) . '</ul>';
+}
+
+function set_err($error=''){
+    $_SESSION['err'][]=$error;
+}
+function set_info($info=''){
+    $_SESSION['info'][]=$info;
 }
 
 function show_error($err) {

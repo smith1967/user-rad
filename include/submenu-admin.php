@@ -33,10 +33,15 @@ if (!defined('BASE_PATH'))
                 'cond' => true,
             ),
             'import-std' => array(
-                'title' => 'นำเข้าข้อมูล',
+                'title' => 'นำเข้าข้อมูล std',
                 'url' => 'admin/import-std',
                 'cond' => true,
-            ),            
+            ),
+            'import-std-radius' => array(
+                'title' => 'โอนข้อมูล std เข้า radius',
+                'url' => 'admin/import-std-radius',
+                'cond' => true,
+            ),             
             'rep-alluser' => array(
                 'title' => 'รายงานการใช้',
                 'url' => 'user/rep-alluser',
