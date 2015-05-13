@@ -5,7 +5,8 @@ $title = "อัพโหลดไฟล์และตรวจสอบข้�
 $active = 'admin';
 $subactive = 'upload-std';
 is_admin('home/index');
-
+?>
+<?php
 /* -- upload process -- */
 if (isset($_POST['submit'])):
     $err = do_upload();
@@ -79,34 +80,24 @@ endif;
 <?php
 
 function do_upload() {
-    $err = array();
     $filename = $_FILES['uploadfile']['tmp_name'];
     $stdfile = UPLOAD_DIR . date('Y-m-d') . '_' . basename($_FILES['uploadfile']['name']);
     $ext = pathinfo($stdfile, PATHINFO_EXTENSION); // die();
     if (strtolower($ext) != 'csv') {
-        $err[] = "ชนิดของไฟล์ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ";
-        //$_SESSION['err'] = $err;
-        //redirect('admin/upload-std');
+        set_err("ชนิดของไฟล์ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ");
     }
 
     if ($_FILES["uploadfile"]["error"] > 0) {
         //echo "Error: " . $_FILES["uploadfile"]["error"] . "<br>";
-        $err[] = "<p>Error: " . $_FILES["uploadfile"]["error"] . "<p/>";
+        set_err("<p>Error: " . $_FILES["uploadfile"]["error"] . "<p/>");
     }
 
     if (file_exists($stdfile)) {
         unlink($stdfile);
     }
     if (!move_uploaded_file($filename, $stdfile)) {
-        $err[] = "อัพโหลดไฟล์ข้อมูลผิดพลาด :" . $stdfile;
+        set_err("อัพโหลดไฟล์ข้อมูลผิดพลาด :" . $stdfile);
     }
-    if (count($err) > 0) {
-        $_SESSION['err'] = $err;
-        //redirect('admin/upload-std');
-    } else {
-        $_SESSION['info'][] = "upload ข้อมูลเรียบร้อย";
-        //do_transfer($stdfile);
-        //redirect('admin/upload-std');
-    }
+
     redirect('admin/file-manager');
 }
