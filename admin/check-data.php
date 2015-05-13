@@ -5,12 +5,10 @@ $title = "ตรวจสอบข้อมูล";
 $active = 'admin';
 $subactive = 'check-data';
 if(!isset($_GET['filename']))
-    redirect ('admin/file-management');
+    redirect ('admin/file-manager');
 is_admin('home/index');
 ?>
 <?php
-$err = array();
-$info = array();
 // -- fields std
 $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
 // -- table cols
@@ -57,14 +55,14 @@ $dbcol = array('std_id', 'pid', 'fname', 'lname', 'groupname');
                 </table>
             </div>
             <?php
-            $importlink = site_url('admin/import-std') . '&action=import&filename=' . $filename;
-            $uploadlink = site_url('admin/upload-std') ;
+            $importlink = site_url('admin/import-std') . '&action=import&filename=' . $_GET['filename'];
+            $uploadlink = site_url('admin/file-manager') ;
             ?>
             <span class="clearfix"></span>
             <?php if ($status): ?>
-            <div class="alert alert-success col-md-4">ข้อมูลถูกต้องสามารถ <a href="<?php echo $importlink; ?>">โอนข้อมูล </a></div>
+            <div class="alert alert-success col-md-4">ข้อมูลถูกต้องสามารถ <a href="<?php echo $importlink; ?>">โอนแฟ้มข้อมูล </a></div>
             <?php else: ?>
-                <div class="alert alert-warning col-md-4">แฟ้มข้อมูลไม่ถูกต้องกลับไป <a href="<?php echo $uploadlink; ?>">จัดการข้อมูล </a></div>  
+                <div class="alert alert-warning col-md-4">ข้อมูลไม่ถูกต้องกลับไป <a href="<?php echo $uploadlink; ?>">จัดการแฟ้มข้อมูล </a></div>  
             <?php endif; ?>
             <span class="clearfix"></span>
             <div class="table table-responsive">
@@ -99,11 +97,6 @@ $dbcol = array('std_id', 'pid', 'fname', 'lname', 'groupname');
 </div> <!--End Main container -->
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php
-
-function check_col($stdcol) {
-    
-}
-
 function do_transfer($stdfile) {
     global $db;
 // -- fields std
@@ -149,17 +142,8 @@ function do_transfer($stdfile) {
 
     mysqli_query($db, $query);
     if (mysqli_affected_rows($db)) {
-        $info[] = '<p><h4>โอนข้อมูลจำนวน ' . mysqli_affected_rows($db) . ' ใส่ตารางชั่วคราว<h4><p>';
-        //redirect('form.php', 3);
+        set_info('โอนข้อมูลจำนวน ' . mysqli_affected_rows($db) . ' ใส่ตารางชั่วคราว');
     } else {
-        $_SESSION['err'][] = "การโอนข้อมูลใส่ตารางชั่วคราวผิดพลาด : " . mysqli_error($db);
-        //redirect('admin/std-import');
-        //die();
-    }
-    if (count($err) > 0) {
-        $_SESSION['err'][] = $err;
-    }
-    if (count($info) > 0) {
-        $_SESSION['info'][] = $info;
+        set_err("การโอนข้อมูลใส่ตารางชั่วคราวผิดพลาด : " . mysqli_error($db));
     }
 }
