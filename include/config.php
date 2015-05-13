@@ -34,7 +34,7 @@ session_start();
 ///////////////////////////////////////////////////////////
 $site_url = 'http://localhost/user-rad/';  // เปลี่ยนตาม site ที่ติดตั้ง
 //$fis_year = '2556';         
-$site_title = 'CSTC Radius User Admin';
+$site_title = 'Radius User Admin';
 $site_subtitle = 'Radius-user Admin';
 $version = 'Radius-user 0.1';
 $project = "CSTC Radius User Admin";
@@ -42,9 +42,9 @@ $auhtor = "Smith Sookkhi";
 $author_email = "smith@cstc.ac.th";
 // database parameter
 $host = 'localhost';
-$user = 'root';
-$password = '063114379';
-$database = 'user_rad';
+$user = 'dbuser';
+$password = 'dbpass';
+$database = 'dbname';
 $charset = 'utf8';
 ///////////////////////////////////////////////////////////
 define('SITE_URL', $site_url);
