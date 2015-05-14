@@ -6,7 +6,7 @@ if (!defined('BASE_PATH'))
     <div>
         <ol class="breadcrumb">
             <li><a href="<?php echo site_url() ?>">หน้าหลัก</a></li>
-            <li class='active'>ดูแลระบบ</li>
+            <li class='active'>จัดการระบบ</li>
         </ol>
     </div>
     <div class='submenu'>
@@ -38,7 +38,7 @@ if (!defined('BASE_PATH'))
 //                'cond' => true,
 //            ),
             'import-std-radius' => array(
-                'title' => 'โอนข้อมูล std เข้า radius',
+                'title' => 'โอน/ลบข้อมูล',
                 'url' => 'admin/import-std-radius',
                 'cond' => true,
             ),             

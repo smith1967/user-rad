@@ -26,20 +26,20 @@
                 'change-password' => array(
                     'title' => 'แก้ไขรหัสผ่าน',
                     'url' => 'user/change-password',
-                    'cond' => isset($_SESSION['user']),
+                    'cond' => true,
                 ),
-                'ireport' => array(
-                    'title' => 'รายงานการใช้',
-                    'url' => 'user/ireport',
-                    'cond' => isset($_SESSION['user']),
-                ),
+//                'ireport' => array(
+//                    'title' => 'รายงานการใช้',
+//                    'url' => 'user/ireport',
+//                    'cond' => isset($_SESSION['user']),
+//                ),
                 'edit-user' => array(
                     'title' => 'แก้ไขข้อมูล',
                     'url' => 'user/edit-user',
                     'cond' => is_auth(),
                 ),
                 'admin' => array(
-                    'title' => 'ผู้ดูแลระบบ',
+                    'title' => 'จัดการระบบ',
                     'url' => 'admin/index',
                     'cond' => is_admin(),
                 ),

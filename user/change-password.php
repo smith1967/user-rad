@@ -6,14 +6,13 @@ $active = 'change-password';
 <?php
 if (isset($_POST['submit'])) {
     $data = $_POST;
-    $err = do_validate($data);  // check ความถูกต้องของข้อมูล
-    if (count($err)) {
-        show_error($err);
+    $valid = do_validate($data);  // check ความถูกต้องของข้อมูล
+    if (!$valid) {
         foreach ($_POST as $k => $v) {
             $$k = $v;  // set variable to form
         }
     } else {
-        do_save();  // ไม่มี error บันทึกข้อมูล
+        do_update();  // ไม่มี error บันทึกข้อมูล
     }
 }
 ?>
@@ -23,20 +22,11 @@ if (isset($_POST['submit'])) {
         $("#username").focus();
     });
 </script>
-<?php
-if (isset($_SESSION['err'])):
-    echo show_error($_SESSION['err']);
-    unset($_SESSION['err']);
-//var_dump($_SESSION);
-endif;
-if (isset($_SESSION['info'])):
-    echo show_info($_SESSION['info']);
-    unset($_SESSION['info']);
-endif;
-?>
+
 <div class='container'>
+    <?php show_message(); ?>
     <div class="page-header">
-        <h2>กรอกข้อมูลสมัครเข้าใช้ระบบ</h2>
+        <h2>แก้ไขรหัสผ่าน</h2>
     </div>
 
     <form class="form-horizontal" id="signupfrm" method="post" action="">
@@ -57,13 +47,13 @@ endif;
             <div class="form-group">
                 <label class="control-label col-xs-2" for="newpass">รหัสผ่านใหม่</label>
                 <div class="col-xs-3">
-                    <input type="password" class="input-xlarge" id="password" name="password" value='<?php echo isset($password) ? $password : ''; ?>'>
+                    <input type="password" class="input-xlarge" id="password" name="newpass" value='<?php echo isset($newpass) ? $newpass : ''; ?>'>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-xs-2" for="confpass">ยืนยันรหัสผ่าน</label>
+                <label class="control-label col-xs-2" for="confpass">ยืนยันรหัสผ่านใหม่</label>
                 <div class="col-xs-3">
-                    <input type="password" class="input-xlarge" id="confirm_password" name='confirm_password' value='<?php echo isset($confirm_password) ? $confirm_password : ''; ?>'>
+                    <input type="password" class="input-xlarge" id="confirm_password" name='confpass' value='<?php echo isset($confpass) ? $confpass : ''; ?>'>
                     <p class="help-block">รหัสผ่านต้องประกอบตัวอักษรตัวเล็ก ตัวใหญ่ และตัวเลขความยาวไม่น้อยกว่า 6 ตัวอักษร</p>
                 </div>
             </div>     
@@ -78,44 +68,26 @@ endif;
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php
 
-function do_save() {
+function do_update() {
     global $db;
     $data = &$_POST;
-    //var_dump($data);
-    //die();
-    $sql = "INSERT INTO `register` (
-			`id` ,`username` ,
-			`fname`,`lname` ,
-			`gid`, `password` ,
-			`email`,`comfirm` ,
-			`pid`,`department`,
-			`created`,`hostname`
-		)VALUES(
-			NULL," . pq($data['username']) . ",
-			" . pq($data['fname']) . "," . pq($data['lname']) . ",
-			" . pq($data['gid']) . "," . pq($data['password']) . ",
-			" . pq($data['email']) . ",'N',
-			" . pq($data['pid']) . "," . pq($data['department']) . ",
-			NOW()," . pq(get_ip()) . ");";
-
-    // die("sql: ".$sql);
-    mysqli_query($db, $sql);
-    if (mysqli_affected_rows($db) > 0) {
-        $_SESSION['info'] = "ลงทะเบียนเรียบร้อยครับ";
-        redirect('home/index');
-    } else {
-        $_SESSION['error'] = "ลงทะเบียนไม่สำเร็จ กรุณาตรวจสอบข้อมูล" . mysqli_error($db) . $sql;
-        redirect('user/signup');
+    $query = "SELECT * FROM users WHERE username=" . pq($data['username']) . " AND password = " . pq($data['password']);
+    //die($query);
+    $result = mysqli_query($db, $query);
+    if (mysql_num_rows($result) == 0) {
+        set_err('กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่าน');
+        redirect('user/change-password');
+        return;
     }
-    /* close statement and connection */
-    //redirect();
-}
-
-function get_info($mem_id) {
-    global $db;
-    $query = "SELECT * FROM member WHERE mem_id='" . pq($mem_id + 0) . "'";
-    $res = mysqli_query($db, $query);
-    return $res;
+    $query = "UPDATE users SET password = " . pq($data['newpass']) . " WHERE username = " . pq($data['username']);
+    $result = mysqli_query($db, $query);
+    mysqli_affected_rows($db) > 0 ? set_info('แก้ไขรหัสผ่านสำเร็จ') : set_err('ไม่สามารถแก้ไขรหัสผ่าน' . mysqli_error($db))  ;
+    if ($data['username'] !== 'admin'):
+        $query = "UPDATE radcheck SET value = " . pq($data['newpass']) . " WHERE username = " . pq($data['username']) . " AND Attribute ='Password'";
+        $result = mysqli_query($db, $query);
+        mysqli_affected_rows($db) < 1 ? set_err('ไม่สามารถแก้ไขรหัสผ่าน' . mysqli_error($db)) : set_info('แก้ไขรหัสผ่าน radcheck สำเร็จ');
+    endif;
+    redirect('user/change-password');
 }
 
 function do_validate($data) {
