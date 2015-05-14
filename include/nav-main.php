@@ -23,9 +23,9 @@
                     'url' => 'user/signup',
                     'cond' => !isset($_SESSION['user']),
                 ),
-                'editpasswd' => array(
+                'change-password' => array(
                     'title' => 'แก้ไขรหัสผ่าน',
-                    'url' => 'user/editpasswd',
+                    'url' => 'user/change-password',
                     'cond' => isset($_SESSION['user']),
                 ),
                 'ireport' => array(

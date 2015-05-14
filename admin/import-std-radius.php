@@ -20,50 +20,64 @@ is_admin('home/index');
     ?>     
 
     <div class="col-md-6">
-        <form method="post">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>กลุ่มผู้ใช้งาน/ดาวน์โหลด/อัพโหลด</label>
-                    <?php
-                    $configs = getConfigs();
-                    foreach ($configs as $config) :
-                        ?>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="optconf" id="optionsRadios1" value="<?php echo $config['gid'] ?>" ><?php echo $config['group_desc'] ?>
-                                <span class="badge"><?php echo $config['download'] ?></span><span class="badge"><?php echo $config['upload'] ?></span>
-                            </label>
-                        </div>
-                    <?php endforeach; ?>
-                    <label for="sel1">เลือกกลุ่มนักศึกษา:</label>
-                    <select class="form-control" id="sel2" name="grp">
-                        <?php $groups = getGroupStd(); ?>
-                        <?php while ($row = mysqli_fetch_array($groups)) : ?>
-                            <option data-subtext="<?php echo $row['total'] ?>"><?php echo $row['grp']; ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default" name="submit">โอนข้อมูล</button>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <label class="panel-title">กลุ่มผู้ใช้งาน/ดาวน์โหลด/อัพโหลด</label>
             </div>
-        </form> 
+            <div class="panel-body">
+                <form method="post">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?php
+                            $configs = getConfigs();
+                            foreach ($configs as $config) :
+                                ?>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optconf" id="optionsRadios1" value="<?php echo $config['gid'] ?>" ><?php echo $config['group_desc'] ?>
+                                        <span class="badge"><?php echo $config['download'] ?></span><span class="badge"><?php echo $config['upload'] ?></span>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                            <label for="sel1">เลือกกลุ่มนักศึกษา:</label>
+                            <select class="form-control" id="sel2" name="grp">
+                                <?php $groups = getGroupStd(); ?>
+                                <?php while ($row = mysqli_fetch_array($groups)) : ?>
+                                    <option data-subtext="<?php echo $row['total'] ?>" ><?php echo $row['grp']; ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default" name="submit">โอนข้อมูล</button>
+                        </div>
+                    </div>
+                </form> 
+            </div>
+        </div>
     </div>
     <div class="table-responsive col-md-6">
-        <table class="table table-condensed table-striped" >
-            <thead><th>กลุ่มชั้นปี/จำนวน</th><th>ลบข้อมูล</th></thead>
-            <?php
-            $groups = getGroups();
-            foreach ($groups as $group) :
-                ?>
-                <tr>
-                    <td> <?php echo $group['grp']; ?> <span class="badge"><?php echo $group['total'] ?></span></td>
-                    <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $group['grp']; ?>" class="delete">ลบ</a></td>
-                </tr>
-                <?php
-            endforeach;
-            ?>
-        </table>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <label class="panel-title">ข้อมูลในระบบ radius</label>
+            </div>
+            <div class="panel-body">       
+                <table class="table table-condensed table-striped" >
+                    <thead><th><span class="badge">ชั้นปี</span><span class="badge">จำนวน</span></th><th>ลบข้อมูล</th></thead>
+                    <?php
+                    $groups = getGroups();
+                    foreach ($groups as $group) :
+                        ?>
+                        <tr>
+                            <td><span class="badge"> <?php echo $group['grp']; ?></span> <span class="badge"><?php echo $group['total'] ?></span></td>
+                            <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $group['grp']; ?>" class="delete">ลบ</a></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                    ?>
+                </table>
+            </div>
+        </div>
+
     </div>   
 </div>  
 </div> <!--End Main container -->
@@ -87,7 +101,7 @@ function getTotal() {
 
 function do_delete($val) {
     global $db;
-    if(empty($val)){
+    if (empty($val)) {
         set_err("ไม่มีกลุ่มข้อมูล");
         redirect('admin/import-std-radius');
     }
@@ -173,7 +187,7 @@ function do_import($grp, $gid) {
                 set_err("การเพิ่มข้อมูลเข้าตาราง usergroup ผิดพลาด  : " . mysqli_error($db));
             }
         }
-        set_info("เพิ่มข้อมูลเข้า radius จำนวน " . mysqli_num_rows($result) . " รายการ ");
+        set_info("โอนข้อมูลเข้าระบบ radius จำนวน " . mysqli_num_rows($result) . " รายการ ");
     } else {
         set_err('ไม่มีการโอนข้อมูลเข้าตาราง radius เนื่องจากมีข้อมูลในระบบอยู่แล้ว');
     }
@@ -188,7 +202,7 @@ function do_import($grp, $gid) {
         ;
         //redirect('form.php');
     } else {
-        set_info('โอนข้อมูลเข้าตาราง users จำนวน ' . mysqli_affected_rows($db) . ' แถว');
+        set_info('โอนข้อมูลเข้าตาราง users จำนวน ' . mysqli_affected_rows($db) . ' รายการ');
     }
     redirect('admin/import-std-radius');
 }
