@@ -15,7 +15,7 @@ is_admin('home/index');
         do_delete($_GET['group']);
     }
     if (isset($_POST['submit']) && isset($_POST['grp'])) {
-        do_import($_POST['grp'],$_POST['optconf']);
+        do_import($_POST['grp'], $_POST['optconf']);
     }
     ?>     
 
@@ -53,17 +53,15 @@ is_admin('home/index');
         <table class="table table-condensed table-striped" >
             <thead><th>กลุ่มชั้นปี/จำนวน</th><th>ลบข้อมูล</th></thead>
             <?php
-            $groups = getGroup();
-            if ($groups):
-                while ($row = mysqli_fetch_array($groups)) :
-                    ?>
-                    <tr>
-                        <td> <?php echo $row['grp']; ?> <span class="badge"><?php echo $row['total'] ?></span></td>
-                        <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $row['grp']; ?>" class="delete">ลบ</a></td>
-                    </tr>
-                    <?php
-                endwhile;
-            endif;
+            $groups = getGroups();
+            foreach ($groups as $group) :
+                ?>
+                <tr>
+                    <td> <?php echo $group['grp']; ?> <span class="badge"><?php echo $group['total'] ?></span></td>
+                    <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $row['grp']; ?>" class="delete">ลบ</a></td>
+                </tr>
+                <?php
+            endforeach;
             ?>
         </table>
     </div>   
@@ -108,11 +106,15 @@ function do_delete($val) {
     redirect('admin/import-std-radius');
 }
 
-function getGroup() {
+function getGroups() {
     global $db;
+    $groups = array();
     $sql = "SELECT DISTINCT(substring(username,1,4)) as grp,COUNT(substring(username,1,4)) as total  FROM users WHERE username REGEXP '^[0-9].{4}' GROUP BY substring(username,1,4) ORDER BY grp DESC;";
     $result = mysqli_query($db, $sql);
-    return $result;
+    while ($row = mysqli_fetch_array($result)) {
+        $groups[] = $row;
+    }
+    return $groups;
 }
 
 function getGroupStd() {
@@ -124,10 +126,10 @@ function getGroupStd() {
 
 function do_import($grp, $gid) {
     global $db;
-    if(empty($gid)){
+    if (empty($gid)) {
         set_err("กรุณาเลือกกลุ่มผู้ใช้งาน");
         redirect('admin/import-std-radius');
-    }  
+    }
     $cfg = getConfig($gid);
     /* tranfer from tmp to radius */
     $sql = "SELECT * FROM stdtemp WHERE std_id LIKE '" . $grp . "%' AND std_id NOT IN (SELECT UserName FROM radcheck)";
@@ -141,7 +143,7 @@ function do_import($grp, $gid) {
                 set_err("การเพิ่มข้อมูลเข้าตาราง radcheck ผิดพลาด : " . mysqli_error($db));
             }
             $sql = "REPLACE INTO radcheck (UserName, Attribute, Op, Value) VALUES (" . pq($line['std_id']) . ", 'Simultaneous-Use', ':=', " . pq(1) . ");";
-            mysqli_query($db, $sql);          
+            mysqli_query($db, $sql);
             if (mysqli_affected_rows($db) < 1) {
                 set_err("การเพิ่มข้อมูลเข้าตาราง radcheck ผิดพลาด : " . mysqli_error($db));
             }
@@ -197,9 +199,10 @@ function getConfigs() {
     }
     return $configs;
 }
+
 function getConfig($gid) {
     global $db;
-    $sql = "SELECT * FROM group_config WHERE gid = ".pq($gid).";";
+    $sql = "SELECT * FROM group_config WHERE gid = " . pq($gid) . ";";
     $rs = mysqli_query($db, $sql);
     $config = mysqli_fetch_array($rs);
     return $config;
