@@ -58,7 +58,7 @@ is_admin('home/index');
                 ?>
                 <tr>
                     <td> <?php echo $group['grp']; ?> <span class="badge"><?php echo $group['total'] ?></span></td>
-                    <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $row['grp']; ?>" class="delete">ลบ</a></td>
+                    <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $group['grp']; ?>" class="delete">ลบ</a></td>
                 </tr>
                 <?php
             endforeach;
@@ -87,6 +87,10 @@ function getTotal() {
 
 function do_delete($val) {
     global $db;
+    if(empty($val)){
+        set_err("ไม่มีกลุ่มข้อมูล");
+        redirect('admin/import-std-radius');
+    }
     $val = $val . '%';
     $sql = "DELETE FROM radcheck WHERE username LIKE " . pq($val);
     mysqli_query($db, $sql);
