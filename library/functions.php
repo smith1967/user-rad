@@ -26,29 +26,30 @@ function redirect($url = '') {
     //echo "<script>window.location.href='".$url."'</script>";
 }
 
-function is_auth($url='') {
-    if(empty($url)){
-        if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {            
+function is_auth($url = '') {
+    if (empty($url)) {
+        if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {
             return TRUE;
-        }else{
+        } else {
             return FALSE;
         }
-    }else{
-        if (!isset($_SESSION['user']) || !is_array($_SESSION['user'])) 
+    } else {
+        if (!isset($_SESSION['user']) || !is_array($_SESSION['user']))
             redirect($url);
     }
 }
-function is_admin($url='') {
-    if(empty($url)){
+
+function is_admin($url = '') {
+    if (empty($url)) {
         if (isset($_SESSION['user']) && $_SESSION['user']['username'] == 'admin') {
             return TRUE;
-        }else{
+        } else {
             return FALSE;
         }
-    }else{
-        if (!isset($_SESSION['user']) || $_SESSION['user']['username'] != 'admin') 
+    } else {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['username'] != 'admin')
             redirect($url);
-    }    
+    }
 }
 
 function gen_option($sql, $def) {
@@ -120,11 +121,12 @@ function gen_menu($menu_class, $menu = array(), $active = 'home/index') {
     return '<ul class="' . $menu_class . '">' . implode('', $a) . '</ul>';
 }
 
-function set_err($error=''){
-    $_SESSION['err'][]=$error;
+function set_err($error = '') {
+    $_SESSION['err'][] = $error;
 }
-function set_info($info=''){
-    $_SESSION['info'][]=$info;
+
+function set_info($info = '') {
+    $_SESSION['info'][] = $info;
 }
 
 function show_error($err) {
@@ -216,28 +218,27 @@ function gen_td($array) {
 }
 
 //contains function to test user connectivity and to force logout user
-
 //function to test user connectivity
 function test_user_connectivity($user, $password, $radiusserver, $radiusport, $nasportnumber, $nassecret) {
-	//test user connectivity using radtest command
-	$command = "radtest $user $password $radiusserver:$radiusport $nasportnumber $nassecret";
-	$result = `$command`;
-	
-	$output="<b>Command</b>: $command<br /><b>Output:</b><br />".nl2br($result);
-	return $output;
+    //test user connectivity using radtest command
+    $command = "radtest $user $password $radiusserver:$radiusport $nasportnumber $nassecret";
+    $result = `$command`;
+
+    $output = "<b>Command</b>: $command<br /><b>Output:</b><br />" . nl2br($result);
+    return $output;
 }
 
 //function to force disconnect user
-function disconnect_user ($theUser, $nasaddr, $coaport, $sharedsecret) {
-	//disconnect user using radclient
-	$command = "echo \"User-Name=$theUser\"|radclient -x $nasaddr:$coaport disconnect $sharedsecret";
-	$result=`$command`;
-	
-	$output="<b>Command</b>: $command<br /><b>Output:</b><br />".nl2br($result)."<br />";
-	return $output;
+function disconnect_user($theUser, $nasaddr, $coaport, $sharedsecret) {
+    //disconnect user using radclient
+    $command = "echo \"User-Name=$theUser\"|radclient -x $nasaddr:$coaport disconnect $sharedsecret";
+    $result = `$command`;
+
+    $output = "<b>Command</b>: $command<br /><b>Output:</b><br />" . nl2br($result) . "<br />";
+    return $output;
 }
 
-function show_message(){
+function show_message() {
     if (isset($_SESSION['err'])) {
         echo show_error($_SESSION['err']);
         unset($_SESSION['err']);
@@ -245,5 +246,22 @@ function show_message(){
     if (isset($_SESSION['info'])) {
         echo show_info($_SESSION['info']);
         unset($_SESSION['info']);
-    }    
+    }
+}
+
+function pagination($table = null, $url='#', $page = 0, $limit = 20) {
+    global $db;
+    if ($table):
+        $query = "SELECT COUNT(*) AS total FROM $table";
+        $result = mysqli_query($db, $query);
+        $row = mysqli_fetch_array($result);
+        $total = $row['total'];
+        $pagenums = (int) $total / $limit + $total % $limit;
+        $html = '<ul class="pagination">';
+        for ($i = 0; $i < $pagenums; $i++) :
+            $page == $i ?  $html .= '<li class="active"><a href="'.$url.'">'.$i.'</a></li>' : $html .= '<li><a href="'.$url.'">'.$i.'</a></li>';            
+        endfor;
+        $html .= '</ul>';
+        return $html;
+    endif;
 }
