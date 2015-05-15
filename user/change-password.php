@@ -92,12 +92,15 @@ function do_update() {
 
 function do_validate($data) {
     $valid = true;
+    $data = &$_POST;
+    $valid = validate_user();
     if (!preg_match('/[a-zA-Z0-9_@]{5,}/', $data['username'])) {
         set_err('ชื่อผู้ใช้ต้องเป็นตัวเลขหรือตัวอักษรภาษาอังกฤษ ความยาวไม่ต่ำกว่า 5 ตัวอักษร');
         $valid = false;
     }
-    if (!preg_match('/[a-zA-Z0-9_@]{6,}/', $data['newpass'])) {
-        set_err('รหัสผ่านต้องเป็นตัวเลขหรือตัวอักษรภาษาอังกฤษ ความยาวไม่ต่ำกว่า 6 ตัวอักษร');
+    //if (!preg_match('/[a-zA-Z0-9_@]{6,}/', $data['newpass'])) {    
+    if (!preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{6,}$/', $data['newpass'])) {
+        set_err('รหัสผ่านต้องมีตัวเลขและตัวอักษรภาษาอังกฤษตัวพิมพ์เล็กและตัวพิมพ์ใหญ่ ความยาวไม่ต่ำกว่า 6 ตัวอักษร');
         $valid = false;
     }
     if ($data['newpass'] != $data['confpass']) {
@@ -105,6 +108,17 @@ function do_validate($data) {
         $valid = false;
     }
     return $valid;
+}
+function validate_user(){
+    global $db;
+    $data = &$_POST;
+    $query = "SELECT * FROM users WHERE username=" . pq($data['username']) . " AND password = " . pq($data['password']);
+    //die($query);
+    $result = mysqli_query($db, $query);
+    if (mysqli_num_rows($result) == 0) {
+        set_err('กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่าน');
+        return false;
+    }    
 }
 ?>
 

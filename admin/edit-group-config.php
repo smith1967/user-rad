@@ -9,6 +9,7 @@ is_admin('home/index');
 <?php
 if (isset($_POST['submit'])) {
     $data = $_POST;
+    die(print_r($data));
     $valid = do_validate($data);  // check ความถูกต้องของข้อมูล
     if (!$valid) {
         foreach ($_POST as $k => $v) {
@@ -25,51 +26,44 @@ if (isset($_POST['submit'])) {
         $("#username").focus();
     });
 </script>
-
+<div class="container">
+    <?php include_once INC_PATH . 'submenu-admin.php'; ?>
+</div>
 <div class='container'>
     <?php show_message(); ?>
-    <div class="page-header">
-        <h2>แก้ไขรหัสผ่าน</h2>
-    </div>
+            <div class="table table-responsive">
+                <table class="table-striped table-condensed">
+                    <tr><th>ชื่อกลุ่ม(Eng)</th><th>ชื่อ(Thai)</th><th>ดาวน์โหลด</th><th>อัพโหลด</th><th>กระทำการ</th></tr>
+                    <?php
+                    $configs = getConfigs();
+                    foreach ($configs as $config) :
+                        ?>                     
+                            <tr>
+                                <td><form method="post"><input type="hidden" value="<?php echo $config['gid'] ?>" name="gid"><input type="text" class="form-control input-sm" name="groupname" value="<?php echo $config['groupname'] ?>"</td>
+                                <td><input type="text" class="form-control input-sm" name="group_desc" value="<?php echo $config['group_desc'] ?>"</td>
+                                <td><input type="text" class="form-control input-sm" name="download" value="<?php echo $config['download'] ?>"</td>
+                                <td><input type="text" class="form-control input-sm" name="upload" value="<?php echo $config['upload'] ?>"</td>
+                                <td class="text-center"><button type="submit" class="btn btn-sm btn-primary" name="submit">บันทึก</button></form></td>
+                            </tr>
+                        </form>
 
-    <form class="form-horizontal" id="signupfrm" method="post" action="">
-        <fieldset>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="username">ชื่อผู้ใช้</label>
-                <div class="col-xs-3">
-                    <input type="text" class="input-xlarge" id="username" name="username" placeholder="Username" value='<?php echo isset($username) ? $username : ''; ?>'>
-                    <p class="help-block">ชื่อผู้ใช้ต้องเป็นภาษาอังกฤษหรือตัวเลขความยาวไม่ต่ำกว่า 5 ตัวอักษร</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="password">รหัสผ่านเดิม</label>
-                <div class="col-xs-3">
-                    <input type="password" class="input-xlarge" id="password" name="password" value='<?php echo isset($password) ? $password : ''; ?>'>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="newpass">รหัสผ่านใหม่</label>
-                <div class="col-xs-3">
-                    <input type="password" class="input-xlarge" id="password" name="newpass" value='<?php echo isset($newpass) ? $newpass : ''; ?>'>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="confpass">ยืนยันรหัสผ่านใหม่</label>
-                <div class="col-xs-3">
-                    <input type="password" class="input-xlarge" id="confirm_password" name='confpass' value='<?php echo isset($confpass) ? $confpass : ''; ?>'>
-                    <p class="help-block">รหัสผ่านต้องประกอบตัวอักษรตัวเล็ก ตัวใหญ่ และตัวเลขความยาวไม่น้อยกว่า 6 ตัวอักษร</p>
-                </div>
-            </div>     
-            <div class="form-group">
-                <div class="col-xs-offset-2 col-xs-10">
-                    <button type="submit" class="btn btn-primary" name='submit'>บันทึกข้อมูล</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
+                    <?php endforeach; ?>
+                </table>
+            </div>    
+</div>  
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php
+
+function getConfigs() {
+    global $db;
+    $configs = array();
+    $sql = "SELECT * FROM group_config;";
+    $rs = mysqli_query($db, $sql);
+    while ($row = mysqli_fetch_array($rs)) {
+        $configs[] = $row;
+    }
+    return $configs;
+}
 
 function do_update() {
     global $db;
@@ -84,7 +78,7 @@ function do_update() {
     }
     $query = "UPDATE users SET password = " . pq($data['newpass']) . " WHERE username = " . pq($data['username']);
     $result = mysqli_query($db, $query);
-    mysqli_affected_rows($db) > 0 ? set_info('แก้ไขรหัสผ่านสำเร็จ') : set_err('ไม่สามารถแก้ไขรหัสผ่าน' . mysqli_error($db))  ;
+    mysqli_affected_rows($db) > 0 ? set_info('แก้ไขรหัสผ่านสำเร็จ') : set_err('ไม่สามารถแก้ไขรหัสผ่าน' . mysqli_error($db));
     if ($data['username'] !== 'admin'):
         $query = "UPDATE radcheck SET value = " . pq($data['newpass']) . " WHERE username = " . pq($data['username']) . " AND Attribute ='Password'";
         $result = mysqli_query($db, $query);
@@ -95,7 +89,8 @@ function do_update() {
 
 function do_validate($data) {
     $valid = true;
-    if (!preg_match('/[a-zA-Z0-9_@]{5,}/', $data['username'])) {
+    $data = &$_POST;
+    if (!preg_match('/[a-zA-Z0-9_]{5,}/', $data['username'])) {
         set_err('ชื่อผู้ใช้ต้องเป็นตัวเลขหรือตัวอักษรภาษาอังกฤษ ความยาวไม่ต่ำกว่า 5 ตัวอักษร');
         $valid = false;
     }
