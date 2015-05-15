@@ -71,14 +71,6 @@ if (isset($_POST['submit'])) {
 function do_update() {
     global $db;
     $data = &$_POST;
-    $query = "SELECT * FROM users WHERE username=" . pq($data['username']) . " AND password = " . pq($data['password']);
-    //die($query);
-    $result = mysqli_query($db, $query);
-    if (mysql_num_rows($result) == 0) {
-        set_err('กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่าน');
-        redirect('user/change-password');
-        return;
-    }
     $query = "UPDATE users SET password = " . pq($data['newpass']) . " WHERE username = " . pq($data['username']);
     $result = mysqli_query($db, $query);
     mysqli_affected_rows($db) > 0 ? set_info('แก้ไขรหัสผ่านสำเร็จ') : set_err('ไม่สามารถแก้ไขรหัสผ่าน' . mysqli_error($db))  ;
@@ -117,8 +109,11 @@ function validate_user(){
     $result = mysqli_query($db, $query);
     if (mysqli_num_rows($result) == 0) {
         set_err('กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่าน');
-        return false;
+        return FALSE;
+    }else{
+        return TRUE;
     }    
 }
+
 ?>
 
