@@ -42,11 +42,16 @@ if (!defined('BASE_PATH'))
                 'url' => 'admin/import-std-radius',
                 'cond' => true,
             ),             
-            'rep-alluser' => array(
-                'title' => 'รายงานการใช้',
-                'url' => 'user/rep-alluser',
+            'edit-group-config' => array(
+                'title' => 'แก้ไขตั้งค่ากลุ่มผู้ใช้',
+                'url' => 'admin/edit-group-config',
                 'cond' => true,
             ),
+//            'rep-alluser' => array(
+//                'title' => 'รายงานการใช้',
+//                'url' => 'user/rep-alluser',
+//                'cond' => true,
+//            ),
         );
         $menu_class = "nav nav-pills";
         echo gen_menu($menu_class, $submenu, $subactive);

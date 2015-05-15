@@ -34,7 +34,8 @@ is_admin('home/index');
                                 ?>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="optconf" id="optionsRadios1" value="<?php echo $config['gid'] ?>" ><?php echo $config['group_desc'] ?>
+                                        <input type="radio" name="optconf" id="optionsRadios1" value="<?php echo $config['gid'] ?>" <?php echo $config['gid']==4? 'checked="checked"':''?>>
+                                            <?php echo $config['group_desc'] ?>
                                         <span class="badge"><?php echo $config['download'] ?></span><span class="badge"><?php echo $config['upload'] ?></span>
                                     </label>
                                 </div>

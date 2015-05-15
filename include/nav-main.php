@@ -34,7 +34,7 @@
 //                    'cond' => isset($_SESSION['user']),
 //                ),
                 'edit-user' => array(
-                    'title' => 'แก้ไขข้อมูล',
+                    'title' => 'แก้ไขข้อมูลผู้ใช้',
                     'url' => 'user/edit-user',
                     'cond' => is_auth(),
                 ),
