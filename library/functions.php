@@ -130,19 +130,17 @@ function set_info($info = '') {
 }
 
 function show_error($err) {
-    echo '<div class="container">';
     echo '<div class="alert alert-danger">';
     if (is_array($err) && count($err) > 0)
         echo "<ul><li>" . implode('</li><li>', $err) . "</li></ul>";
-    echo '</div></div>';
+    echo '</div>';
 }
 
-function show_info($info) {
-    echo '<div class="container">';
+function show_info($info) {  
     echo '<div class="alert alert-info">';
     if (is_array($info) && count($info) > 0)
         echo "<ul><li>" . implode('</li><li>', $info) . "</li></ul>";
-    echo '</div></div>';
+    echo '</div>';
 }
 
 function check_pid($pid) {
