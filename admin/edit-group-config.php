@@ -35,6 +35,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
 <div class="container">
     <?php include_once INC_PATH . 'submenu-admin.php'; ?>
     <?php show_message(); ?>
+    <div class="col-md-10">
     <div class="panel panel-default">
         <div class="panel-heading">แก้ไขข้อมูลกลุ่มผู้ใช้</div>
         <div class="panel-body">
@@ -44,7 +45,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
                     <?php
                     $configs = getConfigs();
                     foreach ($configs as $config) :
-                        $delete_url = site_url('admin/edit-group-config') . '&action=delete&gid=' . $config['gid'];
+                        $delete_url = site_url('admin/edit-group-config&action=delete&gid=' . $config['gid']);
                         ?>                     
                         <tr>
                             <td><form method="post"><input type="hidden" value="<?php echo $config['gid'] ?>" name="gid"><input type="text" class="form-control input-sm" name="groupname" value="<?php echo $config['groupname'] ?>"</td>
@@ -69,8 +70,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
             </div>    
         </div>
     </div>
+    </div>
 </div>  
 <?php require_once INC_PATH . 'footer.php'; ?>
+<script>
+    $('.btn-danger').click(function() {
+        if (!confirm('ยืนยันลบข้อมูล')) {
+            return false;
+        }
+    });
+</script>
+</script>
 <?php
 
 function getConfigs() {

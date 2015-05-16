@@ -43,7 +43,7 @@ if (!defined('BASE_PATH'))
                 'cond' => true,
             ),             
             'edit-group-config' => array(
-                'title' => 'แก้ไขตั้งค่ากลุ่มผู้ใช้',
+                'title' => 'ตั้งค่ากลุ่มผู้ใช้',
                 'url' => 'admin/edit-group-config',
                 'cond' => true,
             ),
