@@ -27,19 +27,19 @@ if (isset($_POST['submit'])) {
             <div class="panel-body">
                 <form class="form-horizontal" id="signupfrm" method="post" action="">
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="username">ชื่อผู้ใช้</label>
-                            <div class="col-md-4">
+                            <label class="control-label col-md-3" for="username">ชื่อผู้ใช้</label>
+                            <div class="col-md-8">
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Username" value='<?php echo isset($username) ? $username : ''; ?>'>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="password">รหัสผ่าน</label>
-                            <div class="col-md-4">
+                            <label class="control-label col-md-3" for="password">รหัสผ่าน</label>
+                            <div class="col-md-8">
                                 <input type="password" class="form-control" id="password" name="password" value='<?php echo isset($password) ? $password : ''; ?>'>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-4">
+                            <div class="col-md-offset-3 col-md-6">
                                 <button type="submit" class="btn btn-default" name='submit'>เข้าระบบ</button>
                             </div>
                         </div>

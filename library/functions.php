@@ -136,7 +136,7 @@ function show_error($err) {
     echo '</div>';
 }
 
-function show_info($info) {  
+function show_info($info) {
     echo '<div class="alert alert-info">';
     if (is_array($info) && count($info) > 0)
         echo "<ul><li>" . implode('</li><li>', $info) . "</li></ul>";
@@ -247,19 +247,39 @@ function show_message() {
     }
 }
 
-function pagination($table = null, $url='#', $page = 0, $limit = 20) {
+function pagination($total, $url = '#', $page = 0, $order = '', $limit = 25) {
     global $db;
-    if ($table):
-        $query = "SELECT COUNT(*) AS total FROM $table";
-        $result = mysqli_query($db, $query);
-        $row = mysqli_fetch_array($result);
-        $total = $row['total'];
-        $pagenums = (int) $total / $limit + $total % $limit;
-        $html = '<ul class="pagination">';
-        for ($i = 0; $i < $pagenums; $i++) :
-            $page == $i ?  $html .= '<li class="active"><a href="'.$url.'">'.$i.'</a></li>' : $html .= '<li><a href="'.$url.'">'.$i.'</a></li>';            
-        endfor;
-        $html .= '</ul>';
-        return $html;
-    endif;
+//    if ($table):
+//        $query = "SELECT COUNT(*) AS total FROM $table";
+//        $result = mysqli_query($db, $query);
+//        $row = mysqli_fetch_array($result);
+//        $total = $row['total'];
+    $pagenums = ceil($total / $limit);
+    $html = '<ul class="pagination">';
+    for ($i = 0; $i < $pagenums; $i++) :
+        if (empty($order)) {
+            $purl = site_url($url) . "&page=$i";
+            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . $i . '</a></li>';
+        } else {
+            $purl = site_url($url) . "&page=$i&order=$order";
+            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . $i . '</a></li>';
+        }
+    endfor;
+    $html .= '</ul>';
+    return $html;
+//    endif;
+}
+
+//human readable time format
+function humanTime($seconds) {
+    if ($seconds <= 60) {
+        return "00:00:" . sprintf("%02d", $seconds);
+    }
+
+    $hour = floor($seconds / 3600);
+    $seconds -=($hour * 3600);
+    $minute = floor($seconds / 60);
+    $seconds -=($minute * 60);
+
+    return sprintf("%d:%02d:%02d", $hour, $minute, $seconds);
 }
