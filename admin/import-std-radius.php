@@ -116,6 +116,9 @@ function do_delete($val) {
     $sql = "DELETE FROM users WHERE username LIKE " . pq($val);
     mysqli_query($db, $sql);
     set_info("<p> ลบข้อมูล users จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
+    $sql = "DELETE FROM usergroup WHERE username LIKE " . pq($val);
+    mysqli_query($db, $sql);
+    set_info("<p> ลบข้อมูล users จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
     $sql = "DELETE FROM radreply WHERE username LIKE " . pq($val);
     mysqli_query($db, $sql);
     set_info("<p> ลบข้อมูล radreply จำนวน " . mysqli_affected_rows($db) . " รายการ </p>");
