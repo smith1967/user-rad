@@ -34,7 +34,7 @@ if (!defined('BASE_PATH'))
             ),
             'list-user' => array(
                 'title' => 'รายชื่อผู้ใช้',
-                'url' => 'admin/list-alluser',
+                'url' => 'admin/list-user',
                 'cond' => true,
             ),
             'import-std-radius' => array(

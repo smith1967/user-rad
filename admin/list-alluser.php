@@ -3,7 +3,7 @@ if (!defined('BASE_PATH'))
     exit('No direct script access allowed');
 $title = "ผู้ดูแลระบบ";
 $active = 'admin';
-$subactive = 'list-alluser';
+$subactive = 'list-user';
 is_admin('home/index');
 ?>
 
