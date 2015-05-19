@@ -259,10 +259,10 @@ function pagination($total, $url = '#', $page = 0, $order = '', $limit = 25) {
     for ($i = 0; $i < $pagenums; $i++) :
         if (empty($order)) {
             $purl = site_url($url) . "&page=$i";
-            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . $i . '</a></li>';
+            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . ($i+1) . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . ($i+1) . '</a></li>';
         } else {
             $purl = site_url($url) . "&page=$i&order=$order";
-            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . $i . '</a></li>';
+            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . ($i+1) . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . ($i+1). '</a></li>';
         }
     endfor;
     $html .= '</ul>';

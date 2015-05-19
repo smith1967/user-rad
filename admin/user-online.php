@@ -12,6 +12,12 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
 <?php require_once INC_PATH . 'header.php'; ?>
 <div class='container'>
     <?php show_message() ?>
+    <div class="page-header"><h4>รายชื่อผู้ใช้ที่กำลังออนไลน์</h4></div>
+    <?php 
+    $total = get_total();
+    if($total > 0):
+        ?>
+    endif;
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -47,7 +53,10 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
             </tbody>
         </table>
     </div>
-    <?php echo pagination(250, 'admin/user-online', $page); ?>
+    <?php echo pagination($total, 'admin/user-online', $page); ?>
+    <?php else : ?>
+    <p>ไม่มีผู้ใช้ที่กำลังออนไลน์</p>
+    <?php endif; ?>
 </div> <!-- end container -->
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php

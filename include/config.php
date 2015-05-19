@@ -42,9 +42,9 @@ $auhtor = "Smith Sookkhi";
 $author_email = "smith@cstc.ac.th";
 // database parameter
 $host = 'localhost';
-$user = 'dbuser';
-$password = 'dbpass';
-$database = 'dbname';
+$user = 'radius';
+$password = 'W0epTK';
+$database = 'radius';
 $charset = 'utf8';
 ///////////////////////////////////////////////////////////
 define('SITE_URL', $site_url);

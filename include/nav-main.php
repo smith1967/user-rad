@@ -43,6 +43,11 @@
                     'url' => 'admin/index',
                     'cond' => is_admin(),
                 ),
+                'admin' => array(
+                    'title' => 'ผู้ใช้ออนไลน์',
+                    'url' => 'admin/user-online',
+                    'cond' => is_admin(),
+                ),
                 'logout' => array(
                     'title' => 'ออกระบบ',
                     'url' => 'user/logout',
@@ -57,9 +62,9 @@
             $menu_class = "nav navbar-nav";
             echo gen_menu($menu_class, $menu, $active);
             ?> 
-        <?php 
-        echo isset($_SESSION['user'])?'<p class="navbar-text navbar-right">คุณ'.$_SESSION['user']['fname'] .' กำลังอยู่ในระบบ</p>':'';
-        ?>
+            <?php
+            echo isset($_SESSION['user']) ? '<p class="navbar-text navbar-right">คุณ' . $_SESSION['user']['fname'] . ' กำลังอยู่ในระบบ</p>' : '';
+            ?>
 
         </div><!--/.nav-collapse -->
     </div>
