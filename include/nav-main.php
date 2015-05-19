@@ -43,7 +43,7 @@
                     'url' => 'admin/index',
                     'cond' => is_admin(),
                 ),
-                'admin' => array(
+                'user-online' => array(
                     'title' => 'ผู้ใช้ออนไลน์',
                     'url' => 'admin/user-online',
                     'cond' => is_admin(),

@@ -26,13 +26,6 @@ $dbcol = array('std_id', 'pid', 'fname', 'lname', 'groupname');
         }
     }
     if (isset($_GET['action'])) {
-        if ($_GET['action'] == 'del') {
-            $filename = UPLOAD_DIR . $_GET['filename'];
-            if (is_file($filename))
-                unlink($filename);
-            else
-                set_err('ไม่สามารถลบไฟล์ ' . $filename);
-        }
         if ($_GET['action'] == 'check') {
             $filename = UPLOAD_DIR . $_GET['filename'];
             $handle = fopen($filename, "r");

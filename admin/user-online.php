@@ -2,8 +2,8 @@
 if (!defined('BASE_PATH'))
     exit('No direct script access allowed');
 $title = "ผู้ใช้ที่กำลังใช้งาน";
-$active = 'admin';
-$subactive = 'user-online';
+$active = 'user-online';
+//$subactive = 'user-online';
 is_admin('home/index');
 $page = isset($_GET['page']) ? $_GET['page'] : 0;
 $limit = isset($_GET['limit']) ? $_GET['limit'] : 25;
