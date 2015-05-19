@@ -58,7 +58,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
         </table>
     </div>
     <?php echo pagination($total, $url, $page, $order) ?>
-    <?php            echo $page; ?>
 
     
 
