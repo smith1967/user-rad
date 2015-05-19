@@ -247,27 +247,22 @@ function show_message() {
     }
 }
 
-function pagination($total, $url = '#', $page = 0, $order = '', $limit = 25) {
+function pagination($total, $url = '#', $page = 0, $order = '', $limit = 10) {
     global $db;
-//    if ($table):
-//        $query = "SELECT COUNT(*) AS total FROM $table";
-//        $result = mysqli_query($db, $query);
-//        $row = mysqli_fetch_array($result);
-//        $total = $row['total'];
-    $pagenums = ceil($total / $limit);
+    $value = $total/$limit;
+    $pages = ceil($value);
     $html = '<ul class="pagination">';
-    for ($i = 0; $i < $pagenums; $i++) :
-        if (empty($order)) {
-            $purl = site_url($url) . "&page=$i";
-            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . ($i+1) . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . ($i+1) . '</a></li>';
-        } else {
-            $purl = site_url($url) . "&page=$i&order=$order";
-            $page == $i ? $html .= '<li class="active"><a href="' . $purl . '">' . ($i+1) . '</a></li>' : $html .= '<li><a href="' . $purl . '">' . ($i+1). '</a></li>';
+    for ($i = 0; $i < $pages; $i++) :
+        if(empty($order)){
+        $purl = $url."&page=".$i;
+        $html .= ($page == $i) ? '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : '<li><a href="' . $purl . '">' . $i . '</a></li>';
+        }else{
+        $purl = $url."&page=".$i;
+        $html .= ($page == $i) ? '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : '<li><a href="' . $purl . '">' . $i . '</a></li>';            
         }
-    endfor;
+        endfor;
     $html .= '</ul>';
     return $html;
-//    endif;
 }
 
 //human readable time format

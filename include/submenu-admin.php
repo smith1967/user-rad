@@ -32,11 +32,11 @@ if (!defined('BASE_PATH'))
                 'url' => 'admin/check-data',
                 'cond' => true,
             ),
-//            'import-std' => array(
-//                'title' => 'นำเข้าข้อมูล std',
-//                'url' => 'admin/import-std',
-//                'cond' => true,
-//            ),
+            'list-user' => array(
+                'title' => 'รายชื่อผู้ใช้',
+                'url' => 'admin/list-alluser',
+                'cond' => true,
+            ),
             'import-std-radius' => array(
                 'title' => 'โอน/ลบข้อมูล',
                 'url' => 'admin/import-std-radius',

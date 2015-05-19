@@ -3,7 +3,7 @@ if (!defined('BASE_PATH'))
     exit('No direct script access allowed');
 $title = "โอนข้อมูล std เข้าระบบ radius";
 $active = 'admin';
-$subactive = 'import-std-radius';
+$subactive = 'list-user';
 is_admin('home/index');
 ?>
 <?php require_once INC_PATH . 'header.php'; ?>
@@ -70,7 +70,10 @@ is_admin('home/index');
                         ?>
                         <tr>
                             <td><span class="badge"> <?php echo $group['grp']; ?></span> <span class="badge"><?php echo $group['total'] ?></span></td>
-                            <td> <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $group['grp']; ?>" class="delete">ลบ</a></td>
+                            <td> 
+                                <a href="<?php echo site_url('admin/import-std-radius') . '&action=delete&group=' . $group['grp']; ?>" class="delete">ลบ</a>
+                                <a href="<?php echo site_url('admin/list-user') . '&action=list&group=' . $group['grp']; ?>" >ดูรายชื่อ</a>
+                            </td>
                         </tr>
                         <?php
                     endforeach;

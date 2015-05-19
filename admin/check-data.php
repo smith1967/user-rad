@@ -104,32 +104,20 @@ function do_transfer($stdfile) {
     $dbcol = array('std_id', 'pid', 'fname', 'lname', 'groupname');
     /* insert data to table tmp */
     $handle = fopen($stdfile, "r");
-// get header column from file    
-    $line = fgets($handle);
-    $cols = explode(",", $line);
-    // print_r($cols);
-
-
+// get header column from file     
+    $cols= fgetcsv($handle); 
     $colindex = array();   // --- get index of array
-    for ($i = 0; $i < count($stdcol); $i++) {
-        for ($j = 0; $j < count($cols); $j++) {
-            if ($stdcol[$i] == $cols[$j]) {
-                $colindex[] = $j;
-            }
-        }
+    foreach ($stdcol as $value) {
+        $colindex[] = array_search($value, $cols);
     }
-// get data to array
-//     fclose($handle);
-//    die();    
-//    print_r($colindex);
-
+    $stdcharset = "";
     while (!feof($handle)) {
-//        $str = fgets($handle);
-//        $str_comma = implode(",", $str);
-//        //echo $str_comma . '<br />';
-//        $stdcharset = mb_detect_encoding($str_comma, "UTF-8", TRUE) ? "UTF-8" : "TIS-620";
-//        $stdcharset == 'TIS-620'?$line = iconv("tis-620", "utf-8", $str) : $line = $str ;
-        $line = iconv("tis-620", "utf-8", fgets($handle));
+        $str = fgetcsv($handle);
+        $str_comma = implode(",", $str);
+        if (empty($stdcharset))
+            $stdcharset = mb_detect_encoding($str_comma, "UTF-8", TRUE) ? "UTF-8" : "TIS-620";
+        $line = ($stdcharset == 'TIS-620') ? iconv("tis-620", "utf-8", $str_comma) : $line = $str_comma;
+        //die($line);
         if (strlen($line)) {
             $row = array();
             $row = explode(",", $line);
