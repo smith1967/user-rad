@@ -43,7 +43,7 @@ $author_email = "smith@cstc.ac.th";
 // database parameter
 $host = 'localhost';
 $user = 'radius';
-$password = 'W0epTK';
+$password = 'password';
 $database = 'radius';
 $charset = 'utf8';
 ///////////////////////////////////////////////////////////
