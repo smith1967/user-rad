@@ -11,9 +11,10 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
     $page = isset($_GET['page']) ? $_GET['page'] : 0;
     $action = isset($_GET['action']) ? $_GET['action'] : "list";
     $group = isset($_GET['group']) ? $_GET['group'] : 'all';
+    $order = isset($_GET['order']) ? $_GET['order'] : '';
     $params = array(
-        action => $action,
-        group => $group
+        'action' => $action,
+        'group' => $group
     );
     $params = http_build_query($params);
     $userlist = get_userlist($page,$group);
@@ -32,14 +33,14 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
     show_message();
     ?> 
         <div class="table-responsive"> 
-        <table class="table table-bordered">
+        <table class="table table-striped table-condensed">
             <thead>
                 <tr>
-                    <th>Row</th>
+                    <th>ID</th>
+                    <th>Username</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Biography</th>
+                    <th>Groupname</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,20 +48,17 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
                     foreach ($userlist as $user) :
                 ?>                            
                 <tr>
+                    <td><?php echo $user['id'] ?></td>
                     <td><?php echo $user['username'] ?></td>
                     <td><?php echo $user['fname'] ?></td>
                     <td><?php echo $user['lname'] ?></td>
                     <td><?php echo $user['groupname'] ?></td>
-                    <td><?php echo $user['id'] ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
     <?php echo pagination($total, $url, $page, $order) ?>
-
-    
-
 </div> <!-- Main contianer -->
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php 
