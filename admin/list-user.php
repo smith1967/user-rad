@@ -28,12 +28,12 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
 
 <div class="container">
     <?php include_once INC_PATH . 'submenu-admin.php'; ?>
-    <div class="page-header" style="margin-top: 0px;"><?php echo pagination($total, $url, $page, $order) ?></div>
     <?php
     show_message();
     ?> 
+    <?php echo pagination($total, $url, $page, $order) ?>
         <div class="table-responsive"> 
-        <table class="table table-striped table-condensed">
+        <table class="table table-striped table-condensed table-hover">
             <thead>
                 <tr>
                     <th>ID</th>
