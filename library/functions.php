@@ -269,6 +269,8 @@ function pagination($total, $url = '#', $page = 0, $order = '', $limit = 10) {
         }
     endfor;
     $html .= '</ul>';
+    if($pages>10)
+        $html .= '</div>';
     return $html;
 }
 
