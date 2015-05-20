@@ -28,7 +28,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
 
 <div class="container">
     <?php include_once INC_PATH . 'submenu-admin.php'; ?>
-    <div class="page-header" style="margin-top: 0px;"><h4>รายชื่อผู้ใช้</h4></div>
+    <div class="page-header" style="margin-top: 0px;"><?php echo pagination($total, $url, $page, $order) ?></div>
     <?php
     show_message();
     ?> 
@@ -58,7 +58,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'list'){
             </tbody>
         </table>
     </div>
-    <?php echo pagination($total, $url, $page, $order) ?>
+    
 </div> <!-- Main contianer -->
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php 
