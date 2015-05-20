@@ -22,8 +22,8 @@ function redirect($url = '') {
     header('Location: ' . $url);
     exit;
     echo '<meta http-equiv="Refresh" content="0; url=' . $url . '" />';
-    //echo '<meta http-equiv="refresh" content="0" url="'.$url.'">';
-    //echo "<script>window.location.href='".$url."'</script>";
+//echo '<meta http-equiv="refresh" content="0" url="'.$url.'">';
+//echo "<script>window.location.href='".$url."'</script>";
 }
 
 function is_auth($url = '') {
@@ -145,7 +145,7 @@ function show_info($info) {
 
 function check_pid($pid) {
     $pattern = '/\d{13}/';
-    //$pid = $_POST['pid'];
+//$pid = $_POST['pid'];
     $result = true;
     if (preg_match($pattern, $pid)) {
         $sum = 0;
@@ -158,8 +158,8 @@ function check_pid($pid) {
 }
 
 function check_passwd($password, $pattern = '/^[a-zA-Z]{1}\w{4,13}[a-zA-Z]{1}$/') {
-    //$pattern = '/^[a-zA-Z]{1}\w{4,13}[a-zA-Z]{1}$/';
-    //$pid = $_POST['pid'];
+//$pattern = '/^[a-zA-Z]{1}\w{4,13}[a-zA-Z]{1}$/';
+//$pid = $_POST['pid'];
     $result = false;
     $result = preg_match($pattern, $password);
     return $result;
@@ -167,7 +167,7 @@ function check_passwd($password, $pattern = '/^[a-zA-Z]{1}\w{4,13}[a-zA-Z]{1}$/'
 
 function check_uname($username) {
     $pattern = '/^[a-z0-9]{5,12}$/';
-    //$pid = $_POST['pid'];
+//$pid = $_POST['pid'];
     $result = false;
     if (preg_match($pattern, $username))
         $result = true;
@@ -175,11 +175,11 @@ function check_uname($username) {
 }
 
 function check_thai($s) {
-    //$tis = utf2tis($s);
-    //$pattern = '/^[ก-๙]{3,}$/';
-    //$pattern = '/^[ก-๛]{3,}$/';
+//$tis = utf2tis($s);
+//$pattern = '/^[ก-๙]{3,}$/';
+//$pattern = '/^[ก-๛]{3,}$/';
     $pattern = '#^[ก-๛]{3,}$#u';
-    //$pid = $_POST['pid'];
+//$pid = $_POST['pid'];
     $result = false;
     if (preg_match($pattern, $s))
         $result = true;
@@ -218,7 +218,7 @@ function gen_td($array) {
 //contains function to test user connectivity and to force logout user
 //function to test user connectivity
 function test_user_connectivity($user, $password, $radiusserver, $radiusport, $nasportnumber, $nassecret) {
-    //test user connectivity using radtest command
+//test user connectivity using radtest command
     $command = "radtest $user $password $radiusserver:$radiusport $nasportnumber $nassecret";
     $result = `$command`;
 
@@ -228,7 +228,7 @@ function test_user_connectivity($user, $password, $radiusserver, $radiusport, $n
 
 //function to force disconnect user
 function disconnect_user($theUser, $nasaddr, $coaport, $sharedsecret) {
-    //disconnect user using radclient
+//disconnect user using radclient
     $command = "echo \"User-Name=$theUser\"|radclient -x $nasaddr:$coaport disconnect $sharedsecret";
     $result = `$command`;
 
@@ -249,18 +249,25 @@ function show_message() {
 
 function pagination($total, $url = '#', $page = 0, $order = '', $limit = 10) {
     global $db;
-    $value = $total/$limit;
+    $value = $total / $limit;
     $pages = ceil($value);
-    $html = '<ul class="pagination">';
+
+    if ($pages > 10) {
+        $html = '<div class="btn-group">';
+        $html .= '<button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">เลือกหน้า <span class="caret"></span></button>';
+        $html .= '<ul class="dropdown-menu">';
+    } else {
+        $html = '<ul class="pagination">';
+    }
     for ($i = 0; $i < $pages; $i++) :
-        if(empty($order)){
-        $purl = $url."&page=".$i;
-        $html .= ($page == $i) ? '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : '<li><a href="' . $purl . '">' . $i . '</a></li>';
-        }else{
-        $purl = $url."&page=".$i;
-        $html .= ($page == $i) ? '<li class="active"><a href="' . $purl . '">' . $i . '</a></li>' : '<li><a href="' . $purl . '">' . $i . '</a></li>';            
+        if (empty($order)) {
+            $purl = $url . "&page=" . $i;
+            $html .= ($page == $i) ? '<li class="active"><a href="' . $purl . '">' . ($i + 1) . '</a></li>' : '<li><a href="' . $purl . '">' . ($i + 1) . '</a></li>';
+        } else {
+            $purl = $url . "&page=" . $i;
+            $html .= ($page == $i) ? '<li class="active"><a href="' . $purl . '">' . ($i + 1) . '</a></li>' : '<li><a href="' . $purl . '">' . ($i + 1) . '</a></li>';
         }
-        endfor;
+    endfor;
     $html .= '</ul>';
     return $html;
 }
