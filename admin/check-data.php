@@ -9,10 +9,7 @@ if (!isset($_GET['filename']))
 is_admin('home/index');
 ?>
 <?php
-// -- fields std
-$stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
-// -- table cols
-$dbcol = array('std_id', 'pid', 'fname', 'lname', 'groupname');
+
 ?>
 <?php require_once INC_PATH . 'header.php'; ?>
 <div class="container">
