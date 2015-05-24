@@ -9,81 +9,34 @@ if (!isset($_GET['filename']))
 is_admin('home/index');
 ?>
 <?php
-
 ?>
 <?php require_once INC_PATH . 'header.php'; ?>
 <div class="container">
     <?php include_once INC_PATH . 'submenu-admin.php'; ?>
     <?php
     show_message();
-    if (isset($_GET['action'])) {
-        if ($_GET['action'] == 'import') {
-            $filename = UPLOAD_DIR . $_GET['filename'];
-            do_transfer($filename);
-        }
+    if (isset($_GET['action']) && $_GET['action'] == 'import' && $_GET['type'] == 'std') {
+        $filename = UPLOAD_DIR . $_GET['filename'];
+        do_transfer_std($filename);
+    }
+    if (isset($_GET['action']) && $_GET['action'] == 'import' && $_GET['type'] == 'users') {
+        $filename = UPLOAD_DIR . $_GET['filename'];
+        do_transfer_users($filename);
     }
     if (isset($_GET['action'])) {
         if ($_GET['action'] == 'check') {
             $filename = UPLOAD_DIR . $_GET['filename'];
-            $handle = fopen($filename, "r");
-            //print_r(fgetcsv($file));
-            $str = fgetcsv($handle);
-            $i = 0;
-            $status = TRUE;
-            // check header csv
-            ?>
-            <div class="table-responsive col-md-4">
-                <table class="table">
-                    <thead>
-                    <th>คอลัมน์</th><th>สถานะ</th>
-                    </thead>
-                    <?php
-                    foreach ($stdcol as $col) {
-                        if (in_array($col, $str)) {
-                            echo '<tr><td>' . $col . '</td><td> <span class="glyphicon glyphicon-ok"></span></td></tr>';
-                        } else {
-                            echo '<tr class="alert-danger"><td>' . $col . '</td><td> <span class="glyphicon glyphicon-remove"></span></td></tr>';
-                            $status = FALSE;
-                        }
-                    }
-                    ?>
-                </table>
-            </div>
-            <?php
-            $importlink = site_url('admin/check-data') . '&action=import&filename=' . $_GET['filename'];
-            $uploadlink = site_url('admin/file-manager');
-            ?>
-            <span class="clearfix"></span>
-            <?php if ($status): ?>
-                <div class="alert alert-success col-md-4">ข้อมูลถูกต้องสามารถ <a href="<?php echo $importlink; ?>">โอนแฟ้มข้อมูล </a></div>
-            <?php else: ?>
-                <div class="alert alert-warning col-md-4">ข้อมูลไม่ถูกต้องกลับไป <a href="<?php echo $uploadlink; ?>">จัดการแฟ้มข้อมูล </a></div>  
-            <?php endif; ?>
-            <span class="clearfix"></span>
-            <div class="table table-responsive">
-                <?php
-                $str = fgetcsv($handle);
-                if (is_array($str)) {
-                    $str_comma = implode(",", $str);
-                    //echo $str_comma . '<br />';
-                    $stdcharset = mb_detect_encoding($str_comma, "UTF-8", TRUE) ? "UTF-8" : "TIS-620";
-                    echo 'charset = ' . $stdcharset . ' <br />';
-                    if ($stdcharset == "UTF-8") {
-                        foreach ($str as $value) {
-                            if ($i < 10)
-                                echo $i++ . " :  " . $value . "<br />";
-                        }
-                    } else {
-                        foreach ($str as $value) {
-                            // if (!mb_detect_encoding($value,"utf-8")){
-                            $value = iconv("tis-620", "utf-8", $value);
-                            // }
-                            if ($i < 10)
-                                echo $i++ . " :  " . $value . "<br />";
-                        }
-                    }
-                }
-                fclose($handle);
+            if (validate_std_file($filename)) {
+                $importlink = site_url('admin/check-data') . '&action=import&type=std&filename=' . $_GET['filename'];
+                echo '<div class="alert alert-success col-md-4">ข้อมูลแฟ้ม std ถูกต้อง <a href= ' . $importlink . '>โอนแฟ้มข้อมูล </a></div>';
+            } elseif (validate_users_file($filename)) {
+                $importlink = site_url('admin/check-data') . '&action=import&type=users&filename=' . $_GET['filename'];
+                echo '<div class="alert alert-success col-md-4">ข้อมูลแฟ้มผู้ใช้งานถูกต้อง <a href= ' . $importlink . '>โอนแฟ้มข้อมูล </a></div>';
+            } else {
+                $uploadlink = site_url('admin/file-manager');
+                echo '<div class="alert alert-warning col-md-4">ข้อมูลไม่ถูกต้องกลับไป <a href= ' . $uploadlink . '>จัดการแฟ้มข้อมูล </a></div>';
+                //die("not valid");
+            }
             }
         }
         ?>     
@@ -93,7 +46,44 @@ is_admin('home/index');
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php
 
-function do_transfer($stdfile) {
+function validate_std_file($filename) {
+    $handle = fopen($filename, "r");
+    //print_r(fgetcsv($file));
+    $col_names = fgetcsv($handle);
+    $valid = TRUE;
+    // -- fields std
+    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
+    // check header csv
+    foreach ($stdcol as $col) {
+        if (!in_array($col, $col_names)) {
+            $valid = FALSE;
+        }
+    }
+    fclose($handle);
+    return $valid;
+}
+
+function validate_users_file($filename) {
+    $handle = fopen($filename, "r");
+    //print_r(fgetcsv($file));
+    $col_names = fgetcsv($handle);
+    //var_dump($col_names);
+    $valid = TRUE;
+    // -- fields std
+    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
+// -- table cols
+    $dbcol = array('username', 'password', 'fname', 'lname', 'groupname');
+    // check header csv
+    foreach ($dbcol as $col) {
+        if (!in_array($col, $col_names)) {
+            $valid = FALSE;
+        }
+    }
+    fclose($handle);
+    return $valid;
+}
+
+function do_transfer_std($stdfile) {
     global $db;
 // -- fields std
     $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
@@ -102,7 +92,7 @@ function do_transfer($stdfile) {
     /* insert data to table tmp */
     $handle = fopen($stdfile, "r");
 // get header column from file     
-    $cols= fgetcsv($handle); 
+    $cols = fgetcsv($handle);
     $colindex = array();   // --- get index of array
     foreach ($stdcol as $value) {
         $colindex[] = array_search($value, $cols);
@@ -132,6 +122,55 @@ function do_transfer($stdfile) {
     mysqli_query($db, $sql);
     $query = "INSERT INTO stdtemp " . $cols . " VALUES " . $values;
     //die($query);
+    mysqli_query($db, $query);
+    if (mysqli_affected_rows($db)) {
+        set_info('โอนข้อมูลจำนวน ' . mysqli_affected_rows($db) . ' ใส่ตารางชั่วคราว');
+        //redirect('admin/file-manager');
+    } else {
+        set_err("การโอนข้อมูลใส่ตารางชั่วคราวผิดพลาด : " . mysqli_error($db));
+        //die();
+    }
+    redirect('admin/file-manager');
+}
+
+function do_transfer_users($usersfile) {
+    global $db;
+    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
+// -- table cols
+    $dbcol = array('username', 'password', 'fname', 'lname', 'groupname');
+    /* insert data to table tmp */
+    $handle = fopen($usersfile, "r");
+// get header column from file     
+    $cols = fgetcsv($handle);
+    $colindex = array();   // --- get index of array
+    foreach ($dbcol as $value) {
+        $colindex[] = array_search($value, $cols);
+    }
+    $stdcharset = "";
+    while (!feof($handle)) {
+        $str = fgetcsv($handle);
+        $str_comma = implode(",", $str);
+        if (empty($stdcharset))
+            $stdcharset = mb_detect_encoding($str_comma, "UTF-8", TRUE) ? "UTF-8" : "TIS-620";
+        $line = ($stdcharset == 'TIS-620') ? iconv("tis-620", "utf-8", $str_comma) : $line = $str_comma;
+        //die($line);
+        if (strlen($line)) {
+            $row = array();
+            $row = explode(",", $line);
+            $val = array();
+            foreach ($colindex as $v) {
+                $val[] = pq($row[$v]);
+            }
+            $arr[] = '(' . implode(",", $val) . ')';    //  set of data array((1,2,3),(4,5,6),..);
+        }
+    }
+    fclose($handle);
+    $values = implode(",", $arr);                   // -- group set data  (1,2,3),(4,5,6),...
+    $cols = "(" . implode(",", $dbcol) . ")";
+    $sql = "TRUNCATE TABLE `users_temp`";
+    mysqli_query($db, $sql);
+    $query = "INSERT INTO users_temp " . $cols . " VALUES " . $values;
+   // die($query);
     mysqli_query($db, $query);
     if (mysqli_affected_rows($db)) {
         set_info('โอนข้อมูลจำนวน ' . mysqli_affected_rows($db) . ' ใส่ตารางชั่วคราว');

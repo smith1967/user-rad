@@ -7,7 +7,7 @@ $subactive = 'list-user';
 is_admin('home/index');
 ?>
 <?php 
-if(isset($_GET['action']) && $_GET['action'] == 'list'){
+if(isset($_GET['action']) && $_GET['action'] == 'list-std'){
     $page = isset($_GET['page']) ? $_GET['page'] : 0;
     $action = isset($_GET['action']) ? $_GET['action'] : "list";
     $group = isset($_GET['group']) ? $_GET['group'] : 'all';
