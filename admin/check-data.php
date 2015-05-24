@@ -69,8 +69,6 @@ function validate_users_file($filename) {
     $col_names = fgetcsv($handle);
     //var_dump($col_names);
     $valid = TRUE;
-    // -- fields std
-    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
 // -- table cols
     $dbcol = array('username', 'password', 'fname', 'lname', 'groupname');
     // check header csv

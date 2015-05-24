@@ -17,8 +17,24 @@ if(isset($_GET['action']) && $_GET['action'] == 'list-std'){
         'group' => $group
     );
     $params = http_build_query($params);
-    $userlist = get_userlist($page,$group);
+    $userslist = get_std_list($page,$group);
     $total = get_total($group);
+    $url = site_url('admin/list-user&').$params;
+    //var_dump($userlist);
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'list-users'){
+    $page = isset($_GET['page']) ? $_GET['page'] : 0;
+    $action = isset($_GET['action']) ? $_GET['action'] : "list";
+    $group = isset($_GET['group']) ? $_GET['group'] : 'all';
+    $order = isset($_GET['order']) ? $_GET['order'] : '';
+    $params = array(
+        'action' => $action,
+        'group' => $group
+    );
+    $params = http_build_query($params);
+    $userslist = get_users_list($page,$group);
+    $total = get_users_total($group);
     $url = site_url('admin/list-user&').$params;
     //var_dump($userlist);
 }
@@ -45,7 +61,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'list-std'){
             </thead>
             <tbody>
                 <?php
-                    foreach ($userlist as $user) :
+                    foreach ($userslist as $user) :
                 ?>                            
                 <tr>
                     <td><?php echo $user['id'] ?></td>
@@ -62,7 +78,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'list-std'){
 </div> <!-- Main contianer -->
 <?php require_once INC_PATH . 'footer.php'; ?>
 <?php 
-function get_userlist($page=0,$group,$limit=10){
+function get_std_list($page=0,$group,$limit=10){
     global $db;
     $start = $page*$limit;
     $val = $group."%";
@@ -74,10 +90,29 @@ function get_userlist($page=0,$group,$limit=10){
    }
    return $userlist;            
 }
+function get_users_list($page=0,$group,$limit=10){
+    global $db;
+    $start = $page*$limit;
+    $val = $group."%";
+    $query = "SELECT * FROM users WHERE groupname LIKE ".pq($val)." LIMIT ".$start.",".$limit;
+   $result = mysqli_query($db, $query);
+   $userlist = array();
+   while ($row = mysqli_fetch_array($result)) {
+       $userlist[] = $row;
+   }
+   return $userlist;            
+}
 function get_total($group){
     global $db;
     $val = $group."%";
     $query = "SELECT * FROM users WHERE username LIKE ".pq($val);
+   $result = mysqli_query($db, $query);
+   return mysqli_num_rows($result);            
+}
+function get_users_total($group){
+    global $db;
+    $val = $group."%";
+    $query = "SELECT * FROM users WHERE groupname LIKE ".pq($val);
    $result = mysqli_query($db, $query);
    return mysqli_num_rows($result);            
 }

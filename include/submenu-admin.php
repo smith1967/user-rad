@@ -38,10 +38,15 @@ if (!defined('BASE_PATH'))
                 'cond' => true,
             ),
             'import-std-radius' => array(
-                'title' => 'โอน/ลบข้อมูล',
+                'title' => 'โอน/ลบข้อมูล std',
                 'url' => 'admin/import-std-radius',
                 'cond' => true,
-            ),             
+            ),
+            'import-users-radius' => array(
+                'title' => 'โอน/ลบข้อมูล users',
+                'url' => 'admin/import-users-radius',
+                'cond' => true,
+            ),
             'edit-group-config' => array(
                 'title' => 'ตั้งค่ากลุ่มผู้ใช้',
                 'url' => 'admin/edit-group-config',
