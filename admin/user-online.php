@@ -18,6 +18,8 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
     $total = get_total();
     if($total > 0):
         ?>
+        <?php echo pagination($total, $url, $page, $order) ?>
+
     <div class="table-responsive">
         <table class="table">
             <thead>
