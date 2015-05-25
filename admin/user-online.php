@@ -43,7 +43,7 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
                     <td><?php echo $user['RadAcctId'] ?></td>
                     <td><?php echo $user['UserName'] ?></td>
                     <td><?php echo $user['FramedIPAddress'] ?></td>
-                    <td><?php echo $user['Acctstarttime'] ?></td>
+                    <td><?php echo $user['AcctStartTime'] ?></td>
                     <td><?php echo $user['AcctSessionTime'] ?></td>
                     <td><?php echo $user['AcctInputOctets'] ?></td>
                     <td><?php echo $user['AcctOutputOctets'] ?></td>
