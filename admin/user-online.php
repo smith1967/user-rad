@@ -8,6 +8,7 @@ is_admin('home/index');
 $page = isset($_GET['page']) ? $_GET['page'] : 0;
 $limit = isset($_GET['limit']) ? $_GET['limit'] : 25;
 $order = isset($_GET['order']) ? $_GET['order'] : '';
+    $url = site_url('admin/user-online');
 ?>
 <?php require_once INC_PATH . 'header.php'; ?>
 <div class='container'>
@@ -17,14 +18,12 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
     $total = get_total();
     if($total > 0):
         ?>
-    endif;
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>ชื่อผู้ใช้</th>
-                    <th>Package</th>
                     <th>IP Address</th>
                     <th>เวลาเริ่มต้น</th>
                     <th>เวลาที่ใช้</th>
@@ -41,7 +40,6 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
                 <tr>
                     <td><?php echo $user['RadAccId'] ?></td>
                     <td><?php echo $user['UserName'] ?></td>
-                    <td>Package</td>
                     <td><?php echo $user['FramedIPAddress'] ?></td>
                     <td><?php echo $user['AcctSessionTime'] ?></td>
                     <td><?php echo $user['AcctInputOctets'] ?></td>
