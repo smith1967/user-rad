@@ -40,13 +40,13 @@ $order = isset($_GET['order']) ? $_GET['order'] : '';
                 foreach ($users as $user) :
                 ?>
                 <tr>
-                    <td><?php echo $user['RadAccId'] ?></td>
+                    <td><?php echo $user['RadAcctId'] ?></td>
                     <td><?php echo $user['UserName'] ?></td>
                     <td><?php echo $user['FramedIPAddress'] ?></td>
+                    <td><?php echo $user['Acctstarttime'] ?></td>
                     <td><?php echo $user['AcctSessionTime'] ?></td>
                     <td><?php echo $user['AcctInputOctets'] ?></td>
                     <td><?php echo $user['AcctOutputOctets'] ?></td>
-                    <td><?php echo $user['FramedIPAddress'] ?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <?php endforeach; ?>
