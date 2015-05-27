@@ -23,13 +23,14 @@ is_admin('home/index');
     show_message();
     ?> 
 
-<?php   $sql = "SELECT gid,group_desc FROM group_config";?>
+
         <div class="container">
             <form method="post" id="form_gid" role="form" >
                 <div class="col-xs-6 col-md-2" style="margin: 2px 0 5px 0px">
                     <select class="form-control" id="sel_gid" name="gid">
                         <option value="">-เลือกกลุ่มผู้ใช้-</option>
                         <?php
+                        $sql = "SELECT gid,group_desc FROM group_config";
                         echo gen_option($sql, isset($_POST['gid']) ? $_POST['gid'] : "");
                         ?>
                     </select>

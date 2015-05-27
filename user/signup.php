@@ -82,16 +82,11 @@ show_message();
                 <label class="control-label col-xs-2 col-md-2" for="gid">กลุ่มผู้ใช้</label>
                 <div class="col-xs-6 col-md-2">
                     <select class='form-control input-sm'id="gid" name="gid">
-<?php
-$gid_list = array(
-    '1' => 'ผู้ดูแลระบบ',
-    '2' => 'ครู',
-    '3' => 'เจ้าหน้าที่',
-    '4' => 'อื่นๆ'
-);
-$def = isset($gid) ? $gid : '2';
-echo gen_option($gid_list, $def)
-?>
+                        <?php
+                        $def = isset($gid) ? $gid : '2';
+                        $sql = "SELECT gid,group_desc FROM group_config";
+                        echo gen_option($sql, $def)
+                        ?>
                     </select>              
                 </div>
             </div>
