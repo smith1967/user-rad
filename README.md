@@ -1,11 +1,11 @@
 # user-rad
 radius admin for vocational education commision
-- import data from std file (.csv, comma)
-- import data form csv file with column header 
+- นำเข้าข้อมูลจากแฟ้มข้อมูล std  (.csv, comma)
+- นำเข้าข้อมูลจากแฟ้มข้อมูล (.csv, comma)  ที่มีหัว column ดังนี้
 -- "username","password","fname","lname","groupname"
 - การติดตั้งเพื่อใช้งานเบื้องต้น
 -- กำหนดค่าคอนฟิกใน include/config.php
--- ติดตั้ง database จาก schema/radius.sql
+-- ติดตั้ง table เพิ่มเติมจาก schema/user-rad.sql
 -- เพิ่ม user admin ลงในตาราง users
 -- Login เข้าระบบโดยใช้ user admin
 -- การโอนข้อมูลเข้าระบบ
