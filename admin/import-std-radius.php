@@ -3,7 +3,7 @@ if (!defined('BASE_PATH'))
     exit('No direct script access allowed');
 $title = "โอนข้อมูล std เข้าระบบ radius";
 $active = 'admin';
-$subactive = 'list-user';
+$subactive = 'import-std-radius';
 is_admin('home/index');
 ?>
 <?php require_once INC_PATH . 'header.php'; ?>
