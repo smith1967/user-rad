@@ -52,7 +52,9 @@ function validate_std_file($filename) {
     $col_names = fgetcsv($handle);
     $valid = TRUE;
     // -- fields std
-    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
+//    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
+    $stdcol = array('code','pin_id','fname','lname','gro');
+    //code,pre_name,fname,lname,birt,pin_id,std_level,gro
     // check header csv
     foreach ($stdcol as $col) {
         if (!in_array($col, $col_names)) {
