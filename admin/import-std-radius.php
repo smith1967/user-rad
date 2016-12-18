@@ -161,7 +161,7 @@ function do_import($grp, $gid) {
     $result = mysqli_query($db, $sql);
 //echo "<table>";
     if (mysqli_num_rows($result) > 0) {
-        while ($line = mysqli_fetch_array($result, MYSQL_ASSOC)) {
+        while ($line = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             $sql = "REPLACE INTO radcheck (UserName, Attribute, Op, Value) VALUES (" . pq($line['std_id']) . ", 'Password', '==', " . pq($line['pid']) . ");";
             mysqli_query($db, $sql);
             if (mysqli_affected_rows($db) < 1) {

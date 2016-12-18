@@ -1,4 +1,4 @@
-f <?php
+<?php
 if (!defined('BASE_PATH'))
     exit('No direct script access allowed');
 $title = "ตรวจสอบข้อมูล";
@@ -8,8 +8,7 @@ if (!isset($_GET['filename']))
     redirect('admin/file-manager');
 is_admin('home/index');
 ?>
-<?php
-?>
+
 <?php require_once INC_PATH . 'header.php'; ?>
 <div class="container">
     <?php include_once INC_PATH . 'submenu-admin.php'; ?>
@@ -52,8 +51,8 @@ function validate_std_file($filename) {
     $col_names = fgetcsv($handle);
     $valid = TRUE;
     // -- fields std
-//    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
-    $stdcol = array('code','pin_id','fname','lname','gro');
+    $stdcol = array('student_id', 'people_id', 'stu_fname', 'stu_lname', 'group_id');
+//    $stdcol = array('code','pin_id','fname','lname','gro');
     //code,pre_name,fname,lname,birt,pin_id,std_level,gro
     // check header csv
     foreach ($stdcol as $col) {

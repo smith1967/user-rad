@@ -10,7 +10,7 @@ is_admin('home/index');
 if(isset($_GET['action']) && $_GET['action'] == 'list-std'){
     $page = isset($_GET['page']) ? $_GET['page'] : 0;
     $action = isset($_GET['action']) ? $_GET['action'] : "list";
-    $group = isset($_GET['group']) ? $_GET['group'] : 'all';
+    $group = isset($_GET['group']) ? $_GET['group'] : '';
     $order = isset($_GET['order']) ? $_GET['order'] : '';
     $params = array(
         'action' => $action,
@@ -26,7 +26,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'list-std'){
 if(isset($_GET['action']) && $_GET['action'] == 'list-users'){
     $page = isset($_GET['page']) ? $_GET['page'] : 0;
     $action = isset($_GET['action']) ? $_GET['action'] : "list";
-    $group = isset($_GET['group']) ? $_GET['group'] : 'all';
+    $group = isset($_GET['group']) ? $_GET['group'] : '';
     $order = isset($_GET['order']) ? $_GET['order'] : '';
     $params = array(
         'action' => $action,
@@ -36,8 +36,11 @@ if(isset($_GET['action']) && $_GET['action'] == 'list-users'){
     $userslist = get_users_list($page,$group);
     $total = get_users_total($group);
     $url = site_url('admin/list-user&').$params;
-    //var_dump($userlist);
+//    var_dump($userlist);
+//    if(empty($total))redirect("/home/");
+//    die();
 }
+//if(!isset($total))redirect("/home/");
 ?>
 
 <?php require_once INC_PATH . 'header.php'; ?>
